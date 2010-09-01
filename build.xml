@@ -50,4 +50,18 @@
     <fail if="test.failure" message="JUnit test failure."/>
   </target>
 
+  <target name="zip">
+    <zip destfile="phs-2010-games.zip">
+      <zipfileset dir="." prefix="phs-2010-games">
+        <include name="build.xml"/>
+        <include name="README"/>
+        <include name="LICENSE"/>
+        <include name=".classpath"/>
+        <include name=".project"/>
+        <include name=".settings/**"/>
+        <include name="**/*.java"/>
+        <include name="lib/**"/>
+      </zipfileset>
+    </zip>
+  </target>
 </project>
