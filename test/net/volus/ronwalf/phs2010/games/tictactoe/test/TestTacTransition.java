@@ -45,8 +45,8 @@ import org.junit.Test;
 public class TestTacTransition {
 	
 	private static TicTacState state(int turn, TicTacCell...cells) {
-		int size = new Long(Math.round( Math.sqrt(cells.length) )).intValue();
-		Board<TicTacCell> board = new Board<TicTacCell>(size, size, Arrays.asList(cells));
+		int size = new Double(Math.ceil( Math.sqrt(cells.length) )).intValue();
+		Board<TicTacCell> board = new Board<TicTacCell>(size, Arrays.asList(cells));
 		return new TicTacState(turn, board);
 	}
 	

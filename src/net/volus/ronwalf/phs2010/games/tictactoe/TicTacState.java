@@ -32,7 +32,7 @@ public class TicTacState {
 
 	public static final TicTacState STANDARD_GAME = new TicTacState(
 			0,
-			new Board<TicTacCell>(3,3));
+			new Board<TicTacCell>(3));
 	
 	public final int turn;
 	public final Board<TicTacCell> board;
