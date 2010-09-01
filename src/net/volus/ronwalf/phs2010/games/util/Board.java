@@ -106,7 +106,7 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			if (givenIter.hasNext()) {
 				elem = givenIter.next();
 			}
-			elements.set(i, elem);
+			elements.add(elem);
 		}
 		
 	}

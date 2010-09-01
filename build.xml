@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="PHS Algorithms Game Project" default="test" basedir=".">
+  <description>Skeletal project for student implementations</description>
+ 
+  <property name="main.src" location="src"/>
+  <property name="main.build" location="build/main"/>
+  <property name="test.src" location="test"/>
+  <property name="test.build" location="build/test"/>
+
+
+  <path id="main.class.path">
+  </path>
+
+  <path id="test.class.path">
+    <pathelement location="${main.build}"/>
+    <pathelement location="lib/junit-4.8.2.jar"/>
+  </path>
+  
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${main.build}"/>
+    <mkdir dir="${test.build}"/>
+  </target>
+
+  <target name="build-main" depends="init">
+    <javac srcdir="${main.src}"  destdir="${main.build}">
+      <classpath refid="main.class.path"/>
+    </javac>
+  </target>
+  
+  <target name="build-test" depends="build-main">
+    <javac srcdir="${test.src}" destdir="${test.build}">
+      <classpath refid="test.class.path"/>
+    </javac>
+  </target>
+
+
+  <target name="test" depends="build-test">
+    <junit fork="yes" haltonfailure="false" dir="." 
+           failureproperty="test.failure"
+           printsummary="withOutAndErr">
+      <classpath refid="test.class.path"/>
+      <classpath path="${test.build}"/>
+      <batchtest>
+         <fileset dir="${test.build}">
+           <include name="**/Test*.class"/>
+         </fileset>
+      </batchtest>
+    </junit>
+    <fail if="test.failure" message="JUnit test failure."/>
+  </target>
+
+</project>

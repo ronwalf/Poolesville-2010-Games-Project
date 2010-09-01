@@ -26,6 +26,79 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.tictactoe.test;
 
-public class TestTacTransition {
+import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
+import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
+import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.List;
+
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacState;
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacTransition;
+import net.volus.ronwalf.phs2010.games.util.Board;
+
+import org.junit.Test;
+
+
+public class TestTacTransition {
+	
+	private static TicTacState state(int turn, TicTacCell...cells) {
+		int size = new Long(Math.round( Math.sqrt(cells.length) )).intValue();
+		Board<TicTacCell> board = new Board<TicTacCell>(size, size, Arrays.asList(cells));
+		return new TicTacState(turn, board);
+	}
+	
+	
+	@Test
+	public void fullBoardTransition() {
+		TicTacState state = state(1,
+				X, O, X, 
+				X, O, O,
+				O, X, X);
+		
+		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
+		assertEquals(0, moves.size());
+	}
+	
+	
+	@Test
+	public void lastBoardTransition() {
+		TicTacState state = state(0,
+				X, O, X, 
+				X, O, O,
+				O, X, null);
+		
+		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
+		assertEquals(1, moves.size());
+		assertEquals(new TicTacMove(2,2), moves.get(0));
+	}
+	
+	
+	@Test
+	public void finishedGameTransition1() {
+		TicTacState state = state(1,
+				X, X, X,
+				O, O, null,
+				null, null, null
+				);
+		
+		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
+		assertEquals(1, moves.size());
+		assertEquals(new TicTacMove(2,2), moves.get(0));
+	}
+	
+	@Test
+	public void finishedGameTransition2() {
+		TicTacState state = state(0,
+				X, X, null,
+				O, O, O,
+				X, null, null
+				);
+		
+		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
+		assertEquals(1, moves.size());
+		assertEquals(new TicTacMove(2,2), moves.get(0));
+	}
 }

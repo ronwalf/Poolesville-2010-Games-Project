@@ -33,7 +33,10 @@ import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
 public class TicTacTransition implements GameTransition<TicTacState, TicTacMove> {
-
+	public static final TicTacTransition instance = new TicTacTransition();
+	
+	private TicTacTransition() {}
+	
 	public TicTacState apply(TicTacState s, TicTacMove a) {
 		TicTacCell cell = s.turnCell();
 		Board<TicTacCell> newBoard = s.board.change(a.x, a.y, cell);
@@ -41,8 +44,6 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	}
 
 	public List<TicTacMove> enumerate(TicTacState s) {
-		
-		
 		
 		List<TicTacMove> moves = new ArrayList<TicTacMove>();
 		
