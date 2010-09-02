@@ -85,8 +85,8 @@ public class TestTacTransition {
 				);
 		
 		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
-		assertEquals(1, moves.size());
-		assertEquals(new TicTacMove(2,2), moves.get(0));
+		assertEquals(0, moves.size());
+		assertEquals(new double[]{1.0, -1.0}, TicTacTransition.instance.score( state ));
 	}
 	
 	@Test
@@ -98,7 +98,7 @@ public class TestTacTransition {
 				);
 		
 		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
-		assertEquals(1, moves.size());
-		assertEquals(new TicTacMove(2,2), moves.get(0));
+		assertEquals(0, moves.size());
+		assertEquals(new double[]{-1.0, 1.0}, TicTacTransition.instance.score( state ));
 	}
 }

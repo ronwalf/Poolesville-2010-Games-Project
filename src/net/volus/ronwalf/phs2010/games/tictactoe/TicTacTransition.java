@@ -56,7 +56,7 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 		return moves;
 	}
 	
-	public int[] score(TicTacState s) {
+	public double[] score(TicTacState s) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -47,9 +47,9 @@ public interface GameTransition<State, Action> {
 	
 	/**
 	 * Score a state.
-	 * @return Null if not a terminal state.  An array corresponding to player cores, otherwise.
+	 * @return Null if not a terminal state.  An array corresponding to player scores, otherwise.
 	 */
-	public int[] score(State s);
+	public double[] score(State s);
 		
 		
 
