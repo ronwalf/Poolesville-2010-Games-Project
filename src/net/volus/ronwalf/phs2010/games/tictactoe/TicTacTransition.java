@@ -27,10 +27,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.tictactoe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.util.Board;
+
+import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
+import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
 
 public class TicTacTransition implements GameTransition<TicTacState, TicTacMove> {
 	public static final TicTacTransition instance = new TicTacTransition();
@@ -45,6 +49,10 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 
 	public List<TicTacMove> enumerate(TicTacState s) {
 		
+		if ( score(s) != null ) {
+			return Collections.emptyList();
+		}
+
 		List<TicTacMove> moves = new ArrayList<TicTacMove>();
 		
 		for (Board.Element<TicTacCell> elem : s.board) {
@@ -57,7 +65,6 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	}
 	
 	public double[] score(TicTacState s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

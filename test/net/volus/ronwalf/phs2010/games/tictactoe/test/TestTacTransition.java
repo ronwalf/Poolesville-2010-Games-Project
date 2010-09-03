@@ -29,6 +29,7 @@ package net.volus.ronwalf.phs2010.games.tictactoe.test;
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -86,7 +87,7 @@ public class TestTacTransition {
 		
 		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
 		assertEquals(0, moves.size());
-		assertEquals(new double[]{1.0, -1.0}, TicTacTransition.instance.score( state ));
+		assertTrue(Arrays.equals(new double[]{1.0, -1.0}, TicTacTransition.instance.score( state )));
 	}
 	
 	@Test
@@ -99,6 +100,6 @@ public class TestTacTransition {
 		
 		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
 		assertEquals(0, moves.size());
-		assertEquals(new double[]{-1.0, 1.0}, TicTacTransition.instance.score( state ));
+		assertTrue(Arrays.equals(new double[]{-1.0, 1.0}, TicTacTransition.instance.score( state )));
 	}
 }
