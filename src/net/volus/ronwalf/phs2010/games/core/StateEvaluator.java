@@ -27,5 +27,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.core;
 
 public interface StateEvaluator<State> {
+	/**
+	 * Returns a score for a state, assuming perfect play.
+	 */
 	public double[] evaluate(State state);
 }
