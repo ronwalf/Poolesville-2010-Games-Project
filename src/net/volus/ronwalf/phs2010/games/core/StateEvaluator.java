@@ -27,5 +27,5 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.core;
 
 public interface StateEvaluator<State> {
-	public int evaluate(State state, int player);
+	public double[] evaluate(State state);
 }
