@@ -38,7 +38,9 @@
   <target name="test" depends="build-test">
     <junit fork="yes" haltonfailure="false" dir="." 
            failureproperty="test.failure"
+           showoutput="true"
            printsummary="withOutAndErr">
+      <formatter type="plain"/>
       <classpath refid="test.class.path"/>
       <classpath path="${test.build}"/>
       <batchtest>
