@@ -66,4 +66,9 @@
       </zipfileset>
     </zip>
   </target>
+
+  <target name="clean">
+    <delete dir="${main.build}"/>
+    <delete dir="${test.build}"/>
+  </target>
 </project>
