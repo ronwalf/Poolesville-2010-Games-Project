@@ -23,13 +23,13 @@
   </target>
 
   <target name="build-main" depends="init">
-    <javac srcdir="${main.src}"  destdir="${main.build}">
+    <javac srcdir="${main.src}"  destdir="${main.build}" debug="on">
       <classpath refid="main.class.path"/>
     </javac>
   </target>
   
   <target name="build-test" depends="build-main">
-    <javac srcdir="${test.src}" destdir="${test.build}">
+    <javac srcdir="${test.src}" destdir="${test.build}" debug="on">
       <classpath refid="test.class.path"/>
     </javac>
   </target>
