@@ -117,7 +117,7 @@ public class TestTacTransition {
 	
 	@Test
 	public void diagnolX1() {
-		TicTacState state = state(0,
+		TicTacState state = state(1,
 				X,O,null,
 				O,X,null,
 				null,null,X
@@ -143,7 +143,7 @@ public class TestTacTransition {
 	
 	@Test
 	public void diagnolX2() {
-		TicTacState state = state(0,
+		TicTacState state = state(1,
 				X,O,X,
 				O,X,O,
 				X,null,null
@@ -161,7 +161,7 @@ public class TestTacTransition {
 				X,O,X,
 				O,null,O
 				);
-		
+
 		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
 		assertEquals(0, moves.size());
 		assertTrue(Arrays.equals(new double[]{-1.0, 1.0}, TicTacTransition.instance.score( state )));
