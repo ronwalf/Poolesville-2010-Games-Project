@@ -65,7 +65,7 @@ public class TestTacTransition {
 	
 	
 	@Test
-	public void lastBoardTransition() {
+	public void lastBoardTransition1() {
 		TicTacState state = state(0,
 				X, O, X, 
 				X, O, O,
@@ -76,6 +76,17 @@ public class TestTacTransition {
 		assertEquals(new TicTacMove(2,2), moves.get(0));
 	}
 	
+	@Test
+	public void lastBoardTransition2() {
+		TicTacState state = state(0,
+				null, O, X, 
+				X, O, O,
+				O, X, X);
+		
+		List<TicTacMove> moves = TicTacTransition.instance.enumerate(state);
+		assertEquals(1, moves.size());
+		assertEquals(new TicTacMove(0,0), moves.get(0));
+	}
 	
 	@Test
 	public void finishedGameTransition1() {
