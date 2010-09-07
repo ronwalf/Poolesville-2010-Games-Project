@@ -44,7 +44,7 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	public TicTacState apply(TicTacState s, TicTacMove a) {
 		TicTacCell cell = s.turnCell();
 		Board<TicTacCell> newBoard = s.board.change(a.x, a.y, cell);
-		return new TicTacState( s.turn + 1, newBoard);
+		return new TicTacState( s.playerTurn() + 1, newBoard);
 	}
 
 	public List<TicTacMove> enumerate(TicTacState s) {
@@ -65,7 +65,91 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	}
 	
 	public double[] score(TicTacState s) {
-		return null;
+		TicTacCell winner = null;
+		// Check the columns.
+	column:
+		for (int i = 0; i < s.board.getSize(); i ++) {
+			for (int j = 0; j < s.board.getSize(); j++) {
+				if ( s.board.get(i, j) == null )
+					continue column;
+				if ( !s.board.get(i, 0).equals( s.board.get(i, j) ) ) {
+					continue column;
+				}
+			}
+			winner = s.board.get(i, 0);
+			break;
+		}
+
+	row:
+		for (int j = 0; j < s.board.getSize(); j ++) {
+			for (int i = 0; i < s.board.getSize(); i++) {
+				if ( s.board.get(i, j) == null )
+					continue row;
+				if ( !s.board.get(0, j).equals( s.board.get(i, j) ) ) {
+					continue row;
+				}
+			}
+			winner = s.board.get(0, j);
+			break;
+		}
+		
+		boolean diagonalD = true;
+		// Diagonal \
+		for (int i = 0; i < s.board.getSize(); i++) {
+			if (s.board.get(i, i) == null) {
+				diagonalD = false;
+				break;
+			}
+			if ( !s.board.get(0, 0).equals( s.board.get(i,i) ) ) {
+				diagonalD = false;
+				break;
+			}
+		}
+		if (diagonalD) {
+			winner = s.board.get(0,0);
+		}
+		// Diagonal /
+		boolean diagonalU = true;
+		for (int j = 0; j < s.board.getSize(); j++) {
+			int i = s.board.getSize() - j - 1;
+			if (s.board.get(i, j) == null) {
+				diagonalU = false;
+				break;
+			}
+			if ( !s.board.get(s.board.getSize()-1, 0).equals( s.board.get(i,j) ) ) {
+				diagonalU = false;
+				break;
+			}
+		}
+		if (diagonalU) {
+			winner = s.board.get(s.board.getSize()-1,0);
+		}
+		
+		boolean full = true;
+		for ( Board.Element<TicTacCell> element : s.board ) {
+			if ( ! element.isSet() ) {
+				full = false;
+				break;
+			}
+		}
+		if ( winner == null && !full ) {
+			return null;
+		}
+		
+		double[] result = new double[2];
+		
+		if (winner == null) {
+			result[X.ordinal()] = 0;
+			result[O.ordinal()] = 0;
+		} else if (X.equals( winner )) {
+			result[ X.ordinal() ] = 1;
+			result[ O.ordinal() ] = -1;
+		} else {
+			result[ X.ordinal() ] = -1;
+			result[ O.ordinal() ] = 1;
+		}
+		
+		return result;
 	}
 
 }
