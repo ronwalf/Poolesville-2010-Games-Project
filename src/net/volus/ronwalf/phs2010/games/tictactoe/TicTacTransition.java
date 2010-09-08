@@ -33,9 +33,6 @@ import java.util.List;
 import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
-import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
-import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
-
 public class TicTacTransition implements GameTransition<TicTacState, TicTacMove> {
 	public static final TicTacTransition instance = new TicTacTransition();
 	
@@ -44,7 +41,7 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	public TicTacState apply(TicTacState s, TicTacMove a) {
 		TicTacCell cell = s.turnCell();
 		Board<TicTacCell> newBoard = s.board.change(a.x, a.y, cell);
-		return new TicTacState( s.turn + 1, newBoard);
+		return new TicTacState( s.playerTurn() + 1, newBoard);
 	}
 
 	public List<TicTacMove> enumerate(TicTacState s) {
@@ -65,6 +62,7 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	}
 	
 	public double[] score(TicTacState s) {
+		// TODO Fill this in.
 		return null;
 	}
 
