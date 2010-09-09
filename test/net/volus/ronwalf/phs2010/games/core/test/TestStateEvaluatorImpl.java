@@ -44,7 +44,7 @@ import net.volus.ronwalf.phs2010.games.util.Board;
 
 import org.junit.Test;
 
-public class StateEvaluatorTests {
+public class TestStateEvaluatorImpl {
 
 	private static final StateEvaluatorFactory factory = StateEvalFactoryImpl.instance;
 	
