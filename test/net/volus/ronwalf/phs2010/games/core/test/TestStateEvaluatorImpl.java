@@ -42,6 +42,7 @@ import net.volus.ronwalf.phs2010.games.tictactoe.TicTacState;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacTransition;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestStateEvaluatorImpl {
@@ -100,6 +101,22 @@ public class TestStateEvaluatorImpl {
 				null, X,    O,    null,
 				null, O,    X,    null,
 				null, null, null, null));
+		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
+		
+		double[] score = eval.evaluate(state);
+		assertArrayEquals( new double[]{0,0}, score, 0.001);
+		
+	}
+	
+	@Ignore("This is way to big to test (21!)")
+	@Test
+	public void testMediumReversi() {
+		ReversiState state = new ReversiState(0, new Board<TicTacCell>(5,
+				null, null, null, null, null,
+				null, X,    O,    null, null,
+				null, O,    X,    null, null,
+				null, null, null, null, null,
+				null, null, null, null, null));
 		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
 		
 		double[] score = eval.evaluate(state);
