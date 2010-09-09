@@ -101,8 +101,25 @@ public class TestStateEvaluatorImpl {
 				null, O,    X,    null,
 				null, null, null, null));
 		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
+		
 		double[] score = eval.evaluate(state);
-		System.out.print(score);
+		assertArrayEquals( new double[]{0,0}, score, 0.001);
+		
+	}
+	
+	@Test
+	public void testMediumReversi() {
+		ReversiState state = new ReversiState(0, new Board<TicTacCell>(5,
+				null, null, null, null, null,
+				null, X,    O,    null, null,
+				null, O,    X,    null, null,
+				null, null, null, null, null,
+				null, null, null, null, null));
+		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
+		
+		double[] score = eval.evaluate(state);
+		assertArrayEquals( new double[]{0,0}, score, 0.001);
+		
 	}
 	
 	
