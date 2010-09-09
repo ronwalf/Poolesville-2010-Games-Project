@@ -220,5 +220,25 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		int y = 0;
+		for (Element<E> elem : this) {
+			if (y != elem.y) {
+				y = elem.y;
+				buffer.append('.');
+			}
+			if (elem.isSet()) {
+				buffer.append( elem.elem );
+			} else {
+				buffer.append( '.' );
+			}
+		}
+		
+		return buffer.toString();
+		
+	}
 
 }

@@ -69,9 +69,11 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 		int[] count = new int[2];
 		for (Board.Element<TicTacCell> elem : s.board) {
 			// Return null if moves are still available
-			if (!elem.isSet())
+			if (elem.isSet())
+				count[elem.elem.ordinal()]++;
+			else if (canFlip(s, elem.x, elem.y) > 0)
 				return null;
-			count[elem.elem.ordinal()]++;
+			
 		}
 		
 		if (count[0] < count[1]) {
