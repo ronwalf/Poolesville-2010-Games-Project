@@ -26,7 +26,6 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 					s.board, a.x +  dxdy[0], a.y + dxdy[1], dxdy[0], dxdy[1]);
 			List<Board.Element<TicTacCell>> path = new ArrayList<Board.Element<TicTacCell>>();
 			for (Board.Element<TicTacCell> elem : elemIter) {
-				System.out.println(elem);
 				TicTacCell cell = elem.elem;
 				if (cell == null)
 					break;
