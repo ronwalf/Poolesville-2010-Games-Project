@@ -26,6 +26,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.core;
 
-public interface StateEvaluatorFactory<State extends PlayerState, Action> {
-	public StateEvaluator<State> create(GameTransition<State,Action> transition);
+public interface StateEvaluatorFactory {
+	public <State extends PlayerState, Action> StateEvaluator<State> create(GameTransition<State,Action> transition);
 }
