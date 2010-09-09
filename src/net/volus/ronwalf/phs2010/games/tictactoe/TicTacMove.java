@@ -26,27 +26,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.tictactoe;
 
-public class TicTacMove {
-	public final int x;
-	public final int y;
-	
-	public TicTacMove(final int x, final int y) {
-		this.x = x;
-		this.y = y;
+import net.volus.ronwalf.phs2010.games.util.Pair;
+
+public class TicTacMove extends Pair<Integer, Integer> {
+
+	public TicTacMove(Integer x, Integer y) {
+		super(x, y);
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if (!getClass().equals(o.getClass())) {
-			return false;
-		}
-		
-		TicTacMove om = (TicTacMove) o;
-		return x == om.x && y == om.y;
-	}
-	
-	@Override
-	public int hashCode() {
-		return x*31 + y;
+	public String toString() {
+		return "move(" + x.toString() + "," + y.toString() + ")";
 	}
 }
