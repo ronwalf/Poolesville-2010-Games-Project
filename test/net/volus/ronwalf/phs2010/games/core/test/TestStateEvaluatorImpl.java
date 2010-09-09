@@ -42,6 +42,7 @@ import net.volus.ronwalf.phs2010.games.tictactoe.TicTacState;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacTransition;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestStateEvaluatorImpl {
@@ -107,6 +108,7 @@ public class TestStateEvaluatorImpl {
 		
 	}
 	
+	@Ignore("This is way to big to test (21!)")
 	@Test
 	public void testMediumReversi() {
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(5,
