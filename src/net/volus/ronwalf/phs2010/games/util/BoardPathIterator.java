@@ -24,19 +24,45 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.core.impl;
+package net.volus.ronwalf.phs2010.games.util;
 
-import net.volus.ronwalf.phs2010.games.core.GameTransition;
-import net.volus.ronwalf.phs2010.games.core.PlayerState;
-import net.volus.ronwalf.phs2010.games.core.StateEvaluator;
-import net.volus.ronwalf.phs2010.games.core.StateEvaluatorFactory;
+import java.util.Iterator;
 
-public class StateEvalFactoryImpl implements StateEvaluatorFactory {
-	
-	public static StateEvalFactoryImpl instance = new StateEvalFactoryImpl();
+public class BoardPathIterator<E> 
+	implements Iterator<Board.Element<E>>, Iterable<Board.Element<E>> {
 
-	public <State extends PlayerState, Action> StateEvaluator<State> create(GameTransition<State, Action> transition) {
-		return new StateEvaluatorImpl<State,Action>(transition);
+	final private Board<E> board;
+	private int x, y;
+	private final int dx, dy;
+	public BoardPathIterator(Board<E> board, int x, int y, int dx, int dy) {
+		this.board = board;
+		this.x = x;
+		this.y = y;
+		this.dx = dx;
+		this.dy = dy;
 	}
 
+	public boolean hasNext() {
+		if (x >= 0 && x < board.getSize()
+				&& y >= 0 && y < board.getSize())
+			return true;
+		return false;
+	}
+
+	public Board.Element<E> next() {
+		Board.Element<E> elem = new Board.Element<E>(x, y, board.get(x, y));
+		x += dx;
+		y += dy;
+		return elem;
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException("Boards are immutable");
+	}
+
+	public Iterator<Board.Element<E>> iterator() {
+		return this;
+	}
+	
+	
 }

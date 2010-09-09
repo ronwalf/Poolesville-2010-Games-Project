@@ -27,6 +27,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -45,11 +46,13 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 	 * @param <E>
 	 */
 	public static class Element<E> {
+		
+
 		public final int x;
 		public final int y;
 		public final E elem;
 		
-		private Element(int x, int y, E elem) {
+		public Element(int x, int y, E elem) {
 			this.x = x;
 			this.y = y;
 			this.elem = elem;
@@ -57,23 +60,41 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 		
 		public boolean isSet() { return elem != null; } 
 		
-		@SuppressWarnings("unchecked")
 		@Override
-		public boolean equals( Object other ) {
-			if ( !getClass().equals(other.getClass()) )
-				return false;
-			Element otherElem = (Element) other;
-			if ( x != otherElem.x
-					|| y != otherElem.y
-					|| !elem.equals(otherElem.elem) )
-				return false;
-			
-			return true;
+		public String toString() {
+			return "Element [" + x + ", " + y + ", " + elem + "]";
 		}
-		
+
 		@Override
 		public int hashCode() {
-			return x + y + elem.hashCode();
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((elem == null) ? 0 : elem.hashCode());
+			result = prime * result + x;
+			result = prime * result + y;
+			return result;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Element other = (Element) obj;
+			if (elem == null) {
+				if (other.elem != null)
+					return false;
+			} else if (!elem.equals(other.elem))
+				return false;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			return true;
 		}
 		
 	}
@@ -89,6 +110,13 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 	@SuppressWarnings("unchecked")
 	public Board(final int size) {
 		this(size, (List<E>) Collections.emptyList());
+	}
+	
+	/**
+	 * Creates a board out of an array of elements
+	 */
+	public Board(int size, final E... elems) {
+		this(size, Arrays.asList(elems));
 	}
 	
 	/** 
@@ -163,25 +191,34 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 		};
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((elements == null) ? 0 : elements.hashCode());
+		result = prime * result + size;
+		return result;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean equals(Object o) {
-		if (!getClass().equals(o.getClass())) {
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		}
-		
-		Board oe = (Board) o;
-		if ( oe.getSize() != getSize()
-				|| !oe.elements.equals(elements) ) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-			
-		
+		Board other = (Board) obj;
+		if (elements == null) {
+			if (other.elements != null)
+				return false;
+		} else if (!elements.equals(other.elements))
+			return false;
+		if (size != other.size)
+			return false;
 		return true;
 	}
 
-	@Override
-	public int hashCode() {
-		return size*31 + elements.hashCode();
-	}
 }

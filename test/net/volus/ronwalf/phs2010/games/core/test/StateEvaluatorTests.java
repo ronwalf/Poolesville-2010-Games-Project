@@ -35,6 +35,8 @@ import java.util.Arrays;
 import net.volus.ronwalf.phs2010.games.core.StateEvaluator;
 import net.volus.ronwalf.phs2010.games.core.StateEvaluatorFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.StateEvalFactoryImpl;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacState;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacTransition;
@@ -91,6 +93,17 @@ public class StateEvaluatorTests {
 		assertArrayEquals(new double[]{-1,1}, score, 0.001);
 	}
 	
+	@Test
+	public void testSmallReversi() {
+		ReversiState state = new ReversiState(0, new Board<TicTacCell>(4,
+				null, null, null, null,
+				null, X,    O,    null,
+				null, O,    X,    null,
+				null, null, null, null));
+		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
+		double[] score = eval.evaluate(state);
+		System.out.print(score);
+	}
 	
 	
 }
