@@ -1,3 +1,29 @@
+/*
+Copyright (c) 2010 Ron Alford <ronwalf@volus.net>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 package net.volus.ronwalf.phs2010.games.reversi;
 
 import java.util.ArrayList;
@@ -14,6 +40,9 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 
 	public static final ReversiTransition instance = new ReversiTransition();
 	
+	/**
+	 * 8 Compass rose directions (starting north)
+	 */
 	private static final List<int[]> directions = Arrays.asList(new int[][]{
 		{0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}}); 
 	
@@ -30,7 +59,7 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 				if (cell == null)
 					break;
 				if (cell.equals(player)) {
-					// Change board
+					// Change cells in between.
 					for (Board.Element<TicTacCell> flip : path) {
 						board = board.change(flip.x, flip.y, player);
 					}
@@ -44,6 +73,8 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 		ReversiState sn = new ReversiState( s.playerTurn() + 1, board );
 		
 		// Whoops, skip player if they can't make a move!
+		// Original player might not be able to move either, in which case
+		// score() should return non-null.
 		if (enumerate(sn).isEmpty())
 			sn = new ReversiState( s.playerTurn(), board );
 		
@@ -55,7 +86,7 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 		List<TicTacMove> moves = new ArrayList<TicTacMove>();
 		
 		for (Board.Element<TicTacCell> elem : s.board) {
-			if (!elem.isSet() && canFlip(s, elem.x, elem.y) > 0) {
+			if (!elem.isSet() && canFlip(s, elem.x, elem.y)) {
 				moves.add(new TicTacMove(elem.x, elem.y));
 			}
 		}
@@ -70,7 +101,7 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 			// Return null if moves are still available
 			if (elem.isSet())
 				count[elem.elem.ordinal()]++;
-			else if (canFlip(s, elem.x, elem.y) > 0)
+			else if (canFlip(s, elem.x, elem.y))
 				return null;
 			
 		}
@@ -83,8 +114,13 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 		return new double[]{0, 0};
 	}
 	
-	public int canFlip(ReversiState s, int x, int y) {
-		int flipped = 0;
+	
+	/**
+	 * Returns true if setting the given location will flip cells.
+	 */
+	private boolean canFlip(ReversiState s, int x, int y) {
+		// This looks suspiciously too much like apply().
+		// Probably should refactor search into an interator.
 		TicTacCell pcell = TicTacCell.values()[s.playerTurn()];
 		
 		for (int[] dxdy : directions) {
@@ -96,14 +132,15 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 				if (cell == null)
 					break;
 				if (cell.equals(pcell)) {
-					flipped += path;
+					if (path > 0)
+						return true;
 					break;
 				}
 				path++;
 			}
 		}
 		
-		return flipped;
+		return false;
 	}
 
 }
