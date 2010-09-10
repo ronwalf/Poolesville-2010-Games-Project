@@ -150,7 +150,7 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 	 * Return the element at (i,j)
 	 */
 	public E get(int i, int j) {
-		return elements.get(i*size + j);
+		return elements.get(i + j*size);
 	}
 	
 	public int getSize() { return size; }
