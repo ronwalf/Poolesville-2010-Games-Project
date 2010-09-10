@@ -228,7 +228,7 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 		for (Element<E> elem : this) {
 			if (y != elem.y) {
 				y = elem.y;
-				buffer.append('.');
+				buffer.append('\n');
 			}
 			if (elem.isSet()) {
 				buffer.append( elem.elem );

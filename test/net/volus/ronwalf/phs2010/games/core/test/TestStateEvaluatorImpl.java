@@ -58,8 +58,20 @@ public class TestStateEvaluatorImpl {
 	
 	
 	@Test
-	public void testBlankTacToe() {
+	public void testBlankTacToe0() {
 		TicTacState blank = state(0,
+				null, null, null,
+				null, null, null,
+				null, null, null);
+		StateEvaluator<TicTacState> eval = factory.create( TicTacTransition.instance );
+		double[] score = eval.evaluate( blank );
+		
+		assertArrayEquals(new double[]{0,0}, score, 0.001);
+	}
+	
+	@Test
+	public void testBlankTacToe1() {
+		TicTacState blank = state(1,
 				null, null, null,
 				null, null, null,
 				null, null, null);
@@ -109,20 +121,38 @@ public class TestStateEvaluatorImpl {
 		
 	}
 	
-	@Ignore("This is way to big to test (21!)")
+	@Ignore("Broken...")
 	@Test
-	public void testMediumReversi() {
+	public void testMediumReversi0() {
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(5,
+				O,    X,    null, O,    X,
+				X,    O,    null, X,    O,
 				null, null, null, null, null,
-				null, X,    O,    null, null,
-				null, O,    X,    null, null,
 				null, null, null, null, null,
-				null, null, null, null, null));
+				X,    O,    null, X,    O));
 		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
 		
 		double[] score = eval.evaluate(state);
 		// ? Don't actually know the proper value.
-		// assertArrayEquals( new double[]{0,0}, score, 0.001);
+		assertArrayEquals( new double[]{-1,1}, score, 0.001);
+		
+	}
+	
+	@Ignore("Broken...")
+	@Test
+	public void testMediumReversi1() {
+		ReversiState state = new ReversiState(1, new Board<TicTacCell>(5,
+				O,    X,    null, O,    X,
+				X,    O,    null, X,    O,
+				null, null, null, null, null,
+				null, null, null, null, null,
+				X,    O,    null, X,    O));
+		System.out.println(state.toString());
+		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
+		
+		double[] score = eval.evaluate(state);
+		// ? Don't actually know the proper value.
+		assertArrayEquals( new double[]{1,-1}, score, 0.001);
 		
 	}
 	
