@@ -30,5 +30,39 @@ public class ReversiState implements PlayerState {
 	public int playerTurn() {
 		return turn;
 	}
+	
+	@Override
+	public String toString() {
+		return "Player " + turn + "\n" + board;
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((board == null) ? 0 : board.hashCode());
+		result = prime * result + turn;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReversiState other = (ReversiState) obj;
+		if (board == null) {
+			if (other.board != null)
+				return false;
+		} else if (!board.equals(other.board))
+			return false;
+		if (turn != other.turn)
+			return false;
+		return true;
+	}
+
+	
 }
