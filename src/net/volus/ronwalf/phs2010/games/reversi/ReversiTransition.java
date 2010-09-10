@@ -65,7 +65,7 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 
 	public double[] score(ReversiState s) {
 		
-		int[] count = new int[2];
+		int[] count = new int[]{ 0, 0 };
 		for (Board.Element<TicTacCell> elem : s.board) {
 			// Return null if moves are still available
 			if (elem.isSet())
@@ -85,6 +85,7 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 	
 	public int canFlip(ReversiState s, int x, int y) {
 		int flipped = 0;
+		TicTacCell pcell = TicTacCell.values()[s.playerTurn()];
 		
 		for (int[] dxdy : directions) {
 			Iterable<Board.Element<TicTacCell>> elemIter = new BoardPathIterator<TicTacCell>(
@@ -94,7 +95,7 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 				TicTacCell cell = elem.elem;
 				if (cell == null)
 					break;
-				if (cell.equals(TicTacCell.values()[s.playerTurn()])) {
+				if (cell.equals(pcell)) {
 					flipped += path;
 					break;
 				}

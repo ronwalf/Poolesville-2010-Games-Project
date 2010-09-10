@@ -32,6 +32,8 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.util.Arrays;
 
+import net.volus.ronwalf.phs2010.games.core.GameTransition;
+import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.core.StateEvaluator;
 import net.volus.ronwalf.phs2010.games.core.StateEvaluatorFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.StateEvalFactoryImpl;
@@ -55,7 +57,6 @@ public class TestStateEvaluatorImpl {
 		Board<TicTacCell> board = new Board<TicTacCell>(size, Arrays.asList(cells));
 		return new TicTacState(turn, board);
 	}
-	
 	
 	@Test
 	public void testBlankTacToe0() {
@@ -107,7 +108,7 @@ public class TestStateEvaluatorImpl {
 	}
 	
 	@Test
-	public void testSmallReversi() {
+	public void testSmallReversi0() {
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(4,
 				null, null, null, null,
 				null, X,    O,    null,
@@ -117,11 +118,24 @@ public class TestStateEvaluatorImpl {
 		
 		double[] score = eval.evaluate(state);
 		// This value is a guess - let me know if you think it's wrong.
-		assertArrayEquals( new double[]{1,-1}, score, 0.001);
-		
+		assertArrayEquals( new double[]{-1,1}, score, 0.001);
 	}
 	
-	@Ignore("Broken...")
+	@Test
+	public void testSmallReversi1() {
+		ReversiState state = new ReversiState(1, new Board<TicTacCell>(4,
+				null, null, null, null,
+				null, X,    O,    null,
+				null, O,    X,    null,
+				null, null, null, null));
+		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
+		
+		double[] score = eval.evaluate(state);
+		// This value is a guess - let me know if you think it's wrong.
+		assertArrayEquals( new double[]{1,-1}, score, 0.001);
+	}
+	
+	@Ignore("Big...")
 	@Test
 	public void testMediumReversi0() {
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(5,
@@ -134,11 +148,10 @@ public class TestStateEvaluatorImpl {
 		
 		double[] score = eval.evaluate(state);
 		// ? Don't actually know the proper value.
-		assertArrayEquals( new double[]{-1,1}, score, 0.001);
-		
+		assertArrayEquals( new double[]{1,-1}, score, 0.001);
 	}
 	
-	@Ignore("Broken...")
+	@Ignore("Big...")
 	@Test
 	public void testMediumReversi1() {
 		ReversiState state = new ReversiState(1, new Board<TicTacCell>(5,
@@ -147,13 +160,12 @@ public class TestStateEvaluatorImpl {
 				null, null, null, null, null,
 				null, null, null, null, null,
 				X,    O,    null, X,    O));
-		System.out.println(state.toString());
+		
 		StateEvaluator<ReversiState> eval = factory.create( ReversiTransition.instance );
 		
 		double[] score = eval.evaluate(state);
 		// ? Don't actually know the proper value.
-		assertArrayEquals( new double[]{1,-1}, score, 0.001);
-		
+		assertArrayEquals( new double[]{-1,1}, score, 0.001);
 	}
 	
 	

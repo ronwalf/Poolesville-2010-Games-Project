@@ -26,15 +26,17 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.tictactoe;
 
+import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
+import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.util.Board;
-
-import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
-import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
+import net.volus.ronwalf.phs2010.games.util.BoardPathIterator;
+import net.volus.ronwalf.phs2010.games.util.Board.Element;
 
 public class TicTacTransition implements GameTransition<TicTacState, TicTacMove> {
 	public static final TicTacTransition instance = new TicTacTransition();
@@ -66,90 +68,60 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	
 	public double[] score(TicTacState s) {
 		TicTacCell winner = null;
-		// Check the columns.
-	column:
-		for (int i = 0; i < s.board.getSize(); i ++) {
-			for (int j = 0; j < s.board.getSize(); j++) {
-				if ( s.board.get(i, j) == null )
-					continue column;
-				if ( !s.board.get(i, 0).equals( s.board.get(i, j) ) ) {
-					continue column;
-				}
-			}
-			winner = s.board.get(i, 0);
-			break;
-		}
 
-	row:
-		for (int j = 0; j < s.board.getSize(); j ++) {
-			for (int i = 0; i < s.board.getSize(); i++) {
-				if ( s.board.get(i, j) == null )
-					continue row;
-				if ( !s.board.get(0, j).equals( s.board.get(i, j) ) ) {
-					continue row;
-				}
-			}
-			winner = s.board.get(0, j);
-			break;
-		}
-		
-		boolean diagonalD = true;
-		// Diagonal \
 		for (int i = 0; i < s.board.getSize(); i++) {
-			if (s.board.get(i, i) == null) {
-				diagonalD = false;
+			
+			// Horizontal
+			winner = check(s.board, 0, i, 1, 0);
+			if (winner != null)
 				break;
-			}
-			if ( !s.board.get(0, 0).equals( s.board.get(i,i) ) ) {
-				diagonalD = false;
+			
+			// Vertical
+			winner = check(s.board, i, 0, 0, 1);
+			if (winner != null)
 				break;
-			}
-		}
-		if (diagonalD) {
-			winner = s.board.get(0,0);
-		}
-		// Diagonal /
-		boolean diagonalU = true;
-		for (int j = 0; j < s.board.getSize(); j++) {
-			int i = s.board.getSize() - j - 1;
-			if (s.board.get(i, j) == null) {
-				diagonalU = false;
-				break;
-			}
-			if ( !s.board.get(s.board.getSize()-1, 0).equals( s.board.get(i,j) ) ) {
-				diagonalU = false;
-				break;
-			}
-		}
-		if (diagonalU) {
-			winner = s.board.get(s.board.getSize()-1,0);
 		}
 		
-		boolean full = true;
-		for ( Board.Element<TicTacCell> element : s.board ) {
-			if ( ! element.isSet() ) {
-				full = false;
-				break;
-			}
-		}
-		if ( winner == null && !full ) {
-			return null;
-		}
+		// Diagonal \
+		if (winner == null)
+			winner = check(s.board, 0, 0, 1, 1);
 		
-		double[] result = new double[2];
+		if (winner == null)
+			winner = check(s.board, 0, s.board.getSize() - 1, 1, -1);
 		
 		if (winner == null) {
-			result[X.ordinal()] = 0;
-			result[O.ordinal()] = 0;
-		} else if (X.equals( winner )) {
-			result[ X.ordinal() ] = 1;
-			result[ O.ordinal() ] = -1;
-		} else {
-			result[ X.ordinal() ] = -1;
-			result[ O.ordinal() ] = 1;
+			for ( Board.Element<TicTacCell> element : s.board ) {
+				if ( ! element.isSet() )
+					return null;
+			}
+		}
+		
+		// Default tie
+		double[] result = new double[]{ 0, 0 };
+		
+		if (winner != null) {
+			result[ X.ordinal() ] = X.equals(winner) ? 1 : -1;
+			result[ O.ordinal() ] = O.equals(winner) ? 1 : -1;
 		}
 		
 		return result;
+	}
+	
+	private TicTacCell check(Board<TicTacCell> board, int x, int y, int dx, int dy) {
+		
+		
+		TicTacCell winner = null;
+		
+		for (Element<TicTacCell> elem : new BoardPathIterator<TicTacCell>(board, x, y, dx, dy)) {
+			if (!elem.isSet())
+				return null;
+			if (winner == null)
+				winner = elem.elem;
+			else if ( !winner.equals( elem.elem ) )
+				return null;
+		}
+		
+		return winner;
 	}
 
 }
