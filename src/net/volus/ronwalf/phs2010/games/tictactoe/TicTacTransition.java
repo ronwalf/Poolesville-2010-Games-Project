@@ -107,6 +107,11 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 		return result;
 	}
 	
+	
+	/**
+	 * Check for a continuous linear path along a board.  
+	 * Return the matching cell if it exists. 
+	 */
 	private TicTacCell check(Board<TicTacCell> board, int x, int y, int dx, int dy) {
 		
 		

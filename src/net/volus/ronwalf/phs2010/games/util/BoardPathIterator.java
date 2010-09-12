@@ -28,6 +28,12 @@ package net.volus.ronwalf.phs2010.games.util;
 
 import java.util.Iterator;
 
+/**
+ * A iterator for linear paths through a <code>Board</code>.
+ * @author ronwalf
+ *
+ * @param <E>
+ */
 public class BoardPathIterator<E> 
 	implements Iterator<Board.Element<E>>, Iterable<Board.Element<E>> {
 
