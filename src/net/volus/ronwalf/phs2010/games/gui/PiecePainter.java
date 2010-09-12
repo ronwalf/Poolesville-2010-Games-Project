@@ -24,49 +24,16 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.tictactoe;
+package net.volus.ronwalf.phs2010.games.gui;
 
-import net.volus.ronwalf.phs2010.games.core.PlayerState;
-import net.volus.ronwalf.phs2010.games.util.Board;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-public class TicTacState implements PlayerState {
+public interface PiecePainter<E> {
 
-	public static final TicTacState STANDARD_GAME = new TicTacState(
-			0,
-			new Board<TicTacCell>(3));
+	public Color getColor();
 	
-	public final int turn;
-	public final Board<TicTacCell> board;
+	public void paint(Graphics2D graphics, int size, E elem);
 	
 	
-	public TicTacState(final int turn, final Board<TicTacCell> board) {
-		this.turn = turn % 2;
-		this.board = board;
-	}
-	
-	public TicTacCell turnCell() {
-		return turn == 0 ? TicTacCell.X : TicTacCell.O;
-	}
-	
-	public int playerCount() { return 2; }
-	public int playerTurn() { return turn; }
-	
-	@Override
-	public boolean equals(Object o) {
-		if (!getClass().equals(o.getClass()))
-			return false;
-		
-		TicTacState os = (TicTacState) o;
-		return turn == os.turn && board.equals(os.board);
-	}
-	
-	@Override 
-	public int hashCode() {
-		return board.hashCode()*31 + turn;
-	}
-	
-	@Override
-	public String toString() {
-		return "Player: " + turn + "\n" + board;
-	}
 }

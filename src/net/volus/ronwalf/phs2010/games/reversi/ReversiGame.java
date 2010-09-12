@@ -24,49 +24,44 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.tictactoe;
+package net.volus.ronwalf.phs2010.games.reversi;
 
-import net.volus.ronwalf.phs2010.games.core.PlayerState;
-import net.volus.ronwalf.phs2010.games.util.Board;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public class TicTacState implements PlayerState {
+import net.volus.ronwalf.phs2010.games.core.Game;
+import net.volus.ronwalf.phs2010.games.core.GameTransition;
+import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 
-	public static final TicTacState STANDARD_GAME = new TicTacState(
-			0,
-			new Board<TicTacCell>(3));
+public class ReversiGame implements Game<ReversiState, TicTacMove> {
+
+	public static ReversiGame instance = new ReversiGame();
 	
-	public final int turn;
-	public final Board<TicTacCell> board;
+	private Map<String, HeuristicFunction<ReversiState>> heuristics
+		= new HashMap<String, HeuristicFunction<ReversiState>>();
 	
-	
-	public TicTacState(final int turn, final Board<TicTacCell> board) {
-		this.turn = turn % 2;
-		this.board = board;
+	public void addHeuristic(String name, HeuristicFunction<ReversiState> function) {
+		heuristics.put(name, function);
 	}
 	
-	public TicTacCell turnCell() {
-		return turn == 0 ? TicTacCell.X : TicTacCell.O;
+	public HeuristicFunction<ReversiState> getHeuristic(String name) {
+		return heuristics.get(name);
+	}
+
+	public ReversiState getInitialState() {
+		return ReversiState.othello;
+	}
+
+	public GameTransition<ReversiState, TicTacMove> getTransition() {
+		return ReversiTransition.instance;
 	}
 	
-	public int playerCount() { return 2; }
-	public int playerTurn() { return turn; }
 	
-	@Override
-	public boolean equals(Object o) {
-		if (!getClass().equals(o.getClass()))
-			return false;
-		
-		TicTacState os = (TicTacState) o;
-		return turn == os.turn && board.equals(os.board);
+
+	public Set<String> heuristics() {
+		return heuristics.keySet();
 	}
-	
-	@Override 
-	public int hashCode() {
-		return board.hashCode()*31 + turn;
-	}
-	
-	@Override
-	public String toString() {
-		return "Player: " + turn + "\n" + board;
-	}
+
 }
