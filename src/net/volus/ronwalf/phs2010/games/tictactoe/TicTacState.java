@@ -28,8 +28,9 @@ package net.volus.ronwalf.phs2010.games.tictactoe;
 
 import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.util.Board;
+import net.volus.ronwalf.phs2010.games.util.BoardState;
 
-public class TicTacState implements PlayerState {
+public class TicTacState implements PlayerState, BoardState<TicTacCell> {
 
 	public static final TicTacState STANDARD_GAME = new TicTacState(
 			0,
@@ -48,6 +49,7 @@ public class TicTacState implements PlayerState {
 		return turn == 0 ? TicTacCell.X : TicTacCell.O;
 	}
 	
+	public Board<TicTacCell> getBoard() { return board; }
 	public int playerCount() { return 2; }
 	public int playerTurn() { return turn; }
 	
