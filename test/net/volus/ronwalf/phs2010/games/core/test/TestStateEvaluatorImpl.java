@@ -94,6 +94,18 @@ public class TestStateEvaluatorImpl {
 		assertArrayEquals(new double[]{1,-1}, score, 0.001);
 	}
 	
+	@Test
+	public void testWinXTacToeFinal() {
+		TicTacState state = state(1,
+				X, O, O,
+				null, X, null,
+				null, null, X);
+		StateEvaluator<TicTacState> eval = factory.create( TicTacTransition.instance );
+		double[] score = eval.evaluate( state );
+		
+		assertArrayEquals(new double[]{1,-1}, score, 0.001);
+	}
+	
 	
 	@Test
 	public void testWinOTacToe() {
@@ -106,6 +118,19 @@ public class TestStateEvaluatorImpl {
 		
 		assertArrayEquals(new double[]{-1,1}, score, 0.001);
 	}
+	
+	@Test
+	public void testWinOTacToeFinal() {
+		TicTacState state = state(0,
+				O, X, X,
+				O, O, X,
+				O, X, null);
+		StateEvaluator<TicTacState> eval = factory.create( TicTacTransition.instance );
+		double[] score = eval.evaluate( state );
+		
+		assertArrayEquals(new double[]{-1,1}, score, 0.001);
+	}
+	
 	
 	@Test
 	public void testSmallReversi0() {
