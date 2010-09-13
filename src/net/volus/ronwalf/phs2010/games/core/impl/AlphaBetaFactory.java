@@ -24,21 +24,29 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.core;
+package net.volus.ronwalf.phs2010.games.core.impl;
 
-import java.util.List;
+import net.volus.ronwalf.phs2010.games.core.GamePlayer;
+import net.volus.ronwalf.phs2010.games.core.GamePlayerFactory;
+import net.volus.ronwalf.phs2010.games.core.GameTransition;
+import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
+import net.volus.ronwalf.phs2010.games.core.PlayerFactoryRegistry;
+import net.volus.ronwalf.phs2010.games.core.PlayerState;
+import net.volus.ronwalf.phs2010.games.core.SearchController;
 
-public interface Game<State extends PlayerState, Action> {
+public final class AlphaBetaFactory implements GamePlayerFactory {
 
-	public State getInitialState();
+	public static final AlphaBetaFactory instance = new AlphaBetaFactory();
+	
+	private AlphaBetaFactory() {}
+	
+	public <State extends PlayerState, Action> GamePlayer<State, Action> createPlayer(
+			GameTransition<State, Action> transition,
+			HeuristicFunction<State> function, SearchController controller) {
+		return new AlphaBetaPlayer<State, Action>(transition, function, controller);
+	}
 
-	public void addHeuristic(String name, HeuristicFunction<State> function);
-	
-	public HeuristicFunction<State> getHeuristic(String name);
-	
-	public GameTransition<State, Action> getTransition();
-	
-	public List<String> heuristics();
-	
-	
+	public static void register() {
+		PlayerFactoryRegistry.addFactory("Pruning Minimax", instance);
+	}
 }

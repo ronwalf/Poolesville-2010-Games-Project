@@ -35,11 +35,11 @@ public class TicTacCellPainter implements PiecePainter<TicTacCell> {
 		int w = Math.max(2, size/10);
 		int[] xPoints1 = {w, size - 1, size - w, 1};
 		int[] yPoints1 = {1, size - w, size - 1, w};
-		g.drawPolygon(xPoints1, yPoints1, xPoints1.length);
+		g.fillPolygon(xPoints1, yPoints1, xPoints1.length);
 		
 		int[] xPoints2 = {1, size - w, size - 1, w};
 		int[] yPoints2 = {size - w, 1, w, size - 1};
-		g.drawPolygon(xPoints2, yPoints2, xPoints2.length);
+		g.fillPolygon(xPoints2, yPoints2, xPoints2.length);
 	}
 
 }

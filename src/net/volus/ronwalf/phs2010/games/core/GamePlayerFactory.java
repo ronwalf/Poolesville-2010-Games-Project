@@ -26,19 +26,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.core;
 
-import java.util.List;
+public interface GamePlayerFactory {
 
-public interface Game<State extends PlayerState, Action> {
-
-	public State getInitialState();
-
-	public void addHeuristic(String name, HeuristicFunction<State> function);
-	
-	public HeuristicFunction<State> getHeuristic(String name);
-	
-	public GameTransition<State, Action> getTransition();
-	
-	public List<String> heuristics();
-	
+	public <State extends PlayerState, Action> GamePlayer<State, Action> 
+		createPlayer( GameTransition<State, Action> transition, 
+				HeuristicFunction<State> function, 
+				SearchController controller );
 	
 }

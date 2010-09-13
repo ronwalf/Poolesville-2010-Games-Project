@@ -32,10 +32,6 @@ import net.volus.ronwalf.phs2010.games.util.Board;
 
 public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
 
-	static {
-		ReversiGame.instance.addHeuristic("count", new ReversiCountHeuristic());
-	}
-	
 	public double[] score(ReversiState state) {
 		double total = 0;
 		double[] score = new double[]{0, 0};
@@ -51,6 +47,10 @@ public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
 		score[1] = 1.9*score[1]/total - .95;
 		
 		return score;
+	}
+
+	public static void register() {
+		ReversiGame.instance.addHeuristic("count", new ReversiCountHeuristic());
 	}
 	
 }

@@ -26,19 +26,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.core;
 
-import java.util.List;
-
-public interface Game<State extends PlayerState, Action> {
-
-	public State getInitialState();
-
-	public void addHeuristic(String name, HeuristicFunction<State> function);
-	
-	public HeuristicFunction<State> getHeuristic(String name);
-	
-	public GameTransition<State, Action> getTransition();
-	
-	public List<String> heuristics();
-	
-	
+public interface GamePlayer<State, Action> {
+	public Action move(State s);
 }

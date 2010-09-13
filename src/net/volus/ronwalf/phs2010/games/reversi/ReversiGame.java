@@ -26,23 +26,28 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.reversi;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.volus.ronwalf.phs2010.games.core.Game;
 import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 
-public class ReversiGame implements Game<ReversiState, TicTacMove> {
+public final class ReversiGame implements Game<ReversiState, TicTacMove> {
 
-	public static ReversiGame instance = new ReversiGame();
+	public final static ReversiGame instance = new ReversiGame();
 	
+	private List<String> names = new ArrayList<String>();
 	private Map<String, HeuristicFunction<ReversiState>> heuristics
 		= new HashMap<String, HeuristicFunction<ReversiState>>();
 	
 	public void addHeuristic(String name, HeuristicFunction<ReversiState> function) {
+		if (!heuristics.containsKey(name))
+			names.add(name);
 		heuristics.put(name, function);
 	}
 	
@@ -58,10 +63,8 @@ public class ReversiGame implements Game<ReversiState, TicTacMove> {
 		return ReversiTransition.instance;
 	}
 	
-	
-
-	public Set<String> heuristics() {
-		return heuristics.keySet();
+	public List<String> heuristics() {
+		return Collections.unmodifiableList(names);
 	}
 
 }
