@@ -24,51 +24,33 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.tictactoe;
+package net.volus.ronwalf.phs2010.games.reversi;
 
-import net.volus.ronwalf.phs2010.games.core.PlayerState;
+import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.util.Board;
-import net.volus.ronwalf.phs2010.games.util.BoardState;
 
-public class TicTacState implements PlayerState, BoardState<TicTacCell> {
+public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
 
-	public static final TicTacState STANDARD_GAME = new TicTacState(
-			0,
-			new Board<TicTacCell>(3));
-	
-	public final int turn;
-	public final Board<TicTacCell> board;
-	
-	
-	public TicTacState(final int turn, final Board<TicTacCell> board) {
-		this.turn = turn % 2;
-		this.board = board;
-	}
-	
-	public TicTacCell turnCell() {
-		return turn == 0 ? TicTacCell.X : TicTacCell.O;
-	}
-	
-	public Board<TicTacCell> getBoard() { return board; }
-	public int playerCount() { return 2; }
-	public int playerTurn() { return turn; }
-	
-	@Override
-	public boolean equals(Object o) {
-		if (!getClass().equals(o.getClass()))
-			return false;
+	public double[] score(ReversiState state) {
+		double total = 0;
+		double[] score = new double[]{0, 0};
 		
-		TicTacState os = (TicTacState) o;
-		return turn == os.turn && board.equals(os.board);
+		for (Board.Element<TicTacCell> cell : state.board) {
+			if (cell.isSet()) {
+				total++;
+				score[cell.elem.ordinal()]++;
+			}
+		}
+		
+		score[0] = 1.9*score[0]/total - .95;
+		score[1] = 1.9*score[1]/total - .95;
+		
+		return score;
+	}
+
+	public static void register() {
+		ReversiGame.instance.addHeuristic("count", new ReversiCountHeuristic());
 	}
 	
-	@Override 
-	public int hashCode() {
-		return board.hashCode()*31 + turn;
-	}
-	
-	@Override
-	public String toString() {
-		return "Player: " + turn + "\n" + board;
-	}
 }

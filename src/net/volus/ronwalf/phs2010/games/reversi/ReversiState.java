@@ -2,12 +2,12 @@ package net.volus.ronwalf.phs2010.games.reversi;
 
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
-
 import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.util.Board;
+import net.volus.ronwalf.phs2010.games.util.BoardState;
 
-public class ReversiState implements PlayerState {
+public class ReversiState implements PlayerState, BoardState<TicTacCell> {
 
 	public static final ReversiState reversi = 
 		new ReversiState(0, new Board<TicTacCell>(8));
@@ -24,6 +24,8 @@ public class ReversiState implements PlayerState {
 		this.turn = turn % 2;
 		this.board = board;
 	}
+	
+	public Board<TicTacCell> getBoard() { return board; }
 	
 	public int playerCount() { return 2; }
 
