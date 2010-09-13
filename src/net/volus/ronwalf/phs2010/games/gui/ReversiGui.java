@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -27,10 +28,10 @@ public class ReversiGui implements Runnable {
 	private SearchController controller;
 	private PlayerSelector<ReversiState, TicTacMove> playerSelector;
 	
+	private JLabel infoLabel;
+	
 	public ReversiGui() {
 		state = ReversiState.othello;
-		
-		
 	}
 	
 	private void startSearch() {
@@ -59,8 +60,14 @@ public class ReversiGui implements Runnable {
 	}
 	
 	public void move(int i, int j) {
-		state = ReversiTransition.instance.apply( state, new TicTacMove(i, j) );
-		bpanel.setBoard(state.board);
+		for ( TicTacMove move : ReversiTransition.instance.enumerate( state ) ) {
+			if ( move.x == i && move.y == j ) {
+				state = ReversiTransition.instance.apply( state, new TicTacMove(i, j) );
+				bpanel.setBoard(state.board);
+				updateInfo();
+				return;
+			}
+		}
 	}
 
 	public void run() {
@@ -113,13 +120,34 @@ public class ReversiGui implements Runnable {
 		p.add(controls, BorderLayout.SOUTH);
 		
 
+		JPanel infoPanel = new JPanel(new BorderLayout());
+		
+		infoLabel = new JLabel("");
+		updateInfo();
+		infoPanel.add(infoLabel, BorderLayout.WEST);
+		
 		playerSelector = new PlayerSelector<ReversiState, TicTacMove>(ReversiGame.instance, controller);
-		p.add(playerSelector, BorderLayout.NORTH);
+		infoPanel.add(playerSelector, BorderLayout.EAST);
+		
+		p.add(infoPanel, BorderLayout.NORTH);
 		
 		f.add(p);
         f.setSize(800,600);
         f.setVisible(true);
         
+	}
+	
+	public void updateInfo() {
+		double[] score = ReversiTransition.instance.score( state );
+		if (score == null) {
+			infoLabel.setText("Turn: " + 
+					TicTacCell.values()[state.playerTurn()].toString().toUpperCase());
+		} else if (score[0] == score[1]) {
+			infoLabel.setText("Game tie!");
+		} else {
+			TicTacCell winner = score[0] > score[1] ? TicTacCell.X : TicTacCell.O;
+			infoLabel.setText("Congratulations " + winner.toString().toUpperCase() + "!");
+		}
 	}
 	
 	public static void main(String args[]) {
