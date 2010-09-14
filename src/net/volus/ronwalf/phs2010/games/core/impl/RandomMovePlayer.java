@@ -36,6 +36,7 @@ public class RandomMovePlayer<State extends PlayerState, Action>
 			move = actions.get( random.nextInt( actions.size() ) );
 		}
 		
+		controller.stop();
 		return move;
 	}
 

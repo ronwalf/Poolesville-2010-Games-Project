@@ -1,16 +1,40 @@
+/*
+Copyright (c) 2010 Ron Alford <ronwalf@volus.net>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 package net.volus.ronwalf.phs2010.games.gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 
-import net.volus.ronwalf.phs2010.games.core.SearchController;
+import net.volus.ronwalf.phs2010.games.core.Game;
 import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.BestNextMoveFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.MinimaxFactory;
@@ -22,52 +46,16 @@ import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 
-public class ReversiGui implements Runnable {
-	ReversiState state;
+public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
 	BoardPanel<TicTacCell> bpanel;
-	private SearchController controller;
-	private PlayerSelector<ReversiState, TicTacMove> playerSelector;
+	TitledBorder boardTitle;
 	
-	private JLabel infoLabel;
+	private PlayerManager<ReversiState, TicTacMove> manager;
 	
-	public ReversiGui() {
-		state = ReversiState.othello;
-	}
-	
-	private void startSearch() {
-		bpanel.setEnabled(false);
-		Runnable search = new Runnable() {
-
-			public void run() {
-				
-				final TicTacMove move = playerSelector.getPlayer().move( state );
-				
-				SwingUtilities.invokeLater(new Runnable(){
-
-					public void run() {
-						if (move != null) {
-							move(move.x,move.y);
-						}
-						bpanel.setEnabled(true);
-					}
-					
-				});
-			}
-			
-		};
-		new Thread(search).start();
-		
-	}
+	public ReversiGui() {}
 	
 	public void move(int i, int j) {
-		for ( TicTacMove move : ReversiTransition.instance.enumerate( state ) ) {
-			if ( move.x == i && move.y == j ) {
-				state = ReversiTransition.instance.apply( state, new TicTacMove(i, j) );
-				bpanel.setBoard(state.board);
-				updateInfo();
-				return;
-			}
-		}
+		manager.move(new TicTacMove(i, j));
 	}
 
 	public void run() {
@@ -75,79 +63,55 @@ public class ReversiGui implements Runnable {
 		JPanel p = new JPanel(new BorderLayout());
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         
-		bpanel = new BoardPanel<TicTacCell>(state.board, TicTacCellPainter.instance);
-		
-		
+        Game<ReversiState, TicTacMove> reversi = ReversiGame.instance;
+ 
+        bpanel = new BoardPanel<TicTacCell>(reversi.getInitialState().getBoard(),
+				TicTacCellPainter.instance);
 		bpanel.setListener(new BoardListener<TicTacCell>(){
 
 			public void cellPressed(BoardPanel<TicTacCell>.Cell cell) {
-				ReversiGui.this.move(cell.i, cell.j);
-				
+				manager.move(new TicTacMove(cell.i, cell.j));
 			}
 			
 		});
-		
-		
+		boardTitle = BorderFactory.createTitledBorder("HI");
+		bpanel.setBorder(boardTitle);
 		p.add(bpanel, BorderLayout.CENTER);
+		
+        manager = new PlayerManager<ReversiState, TicTacMove>(reversi, this);
+        p.add(manager, BorderLayout.EAST);
         
-		JPanel controls = new JPanel(new BorderLayout());
-		JButton run = new JButton("Run!");
-		run.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				startSearch();
-			}
-			
-		});
-		controls.add(run, BorderLayout.WEST);
 		
-		
-        StopPanel stop = new StopPanel();
-		controller = stop.getController();
-		controls.add(stop);
-		
-		JButton reset = new JButton("Reset");
-		reset.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				state = ReversiState.othello;
-				bpanel.setBoard(state.getBoard());
-			}
-			
-		});
-		controls.add(reset, BorderLayout.EAST);
         
-		p.add(controls, BorderLayout.SOUTH);
 		
-
-		JPanel infoPanel = new JPanel(new BorderLayout());
-		
-		infoLabel = new JLabel("");
-		updateInfo();
-		infoPanel.add(infoLabel, BorderLayout.WEST);
-		
-		playerSelector = new PlayerSelector<ReversiState, TicTacMove>(ReversiGame.instance, controller);
-		infoPanel.add(playerSelector, BorderLayout.EAST);
-		
-		p.add(infoPanel, BorderLayout.NORTH);
+		stateChanged(reversi.getInitialState());
 		
 		f.add(p);
         f.setSize(800,600);
         f.setVisible(true);
         
 	}
-	
-	public void updateInfo() {
+
+	public void stateBusy() {
+		bpanel.setEnabled(false);
+	}
+
+	public void stateChanged(ReversiState state) {
 		double[] score = ReversiTransition.instance.score( state );
 		if (score == null) {
-			infoLabel.setText("Turn: " + 
+			boardTitle.setTitle("Turn: " + 
 					TicTacCell.values()[state.playerTurn()].toString().toUpperCase());
 		} else if (score[0] == score[1]) {
-			infoLabel.setText("Game tie!");
+			boardTitle.setTitle("Game tie!");
 		} else {
 			TicTacCell winner = score[0] > score[1] ? TicTacCell.X : TicTacCell.O;
-			infoLabel.setText("Congratulations " + winner.toString().toUpperCase() + "!");
+			boardTitle.setTitle("Congratulations " + winner.toString().toUpperCase() + "!");
 		}
+		bpanel.setBoard(state.getBoard());
+	}
+
+	public void stateUnbusy() {
+		bpanel.setEnabled(true);
 	}
 	
 	public static void main(String args[]) {
@@ -162,4 +126,5 @@ public class ReversiGui implements Runnable {
 		
 		SwingUtilities.invokeLater(new ReversiGui());
 	}
+
 }

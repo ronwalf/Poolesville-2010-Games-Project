@@ -22,6 +22,8 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 
 	public Action move(State s) {
 		controller.start();
+		// your code here
+		controller.stop();
 		return null;
 	}
 

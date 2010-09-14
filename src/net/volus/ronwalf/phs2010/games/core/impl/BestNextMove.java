@@ -36,6 +36,8 @@ public class BestNextMove<State extends PlayerState, Action> implements GamePlay
 			if (score[s.playerTurn()] > best)
 				bestAction = a;
 		}
+		
+		controller.stop();
 		return bestAction;
 	}
 

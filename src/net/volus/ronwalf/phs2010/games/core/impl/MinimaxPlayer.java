@@ -22,6 +22,9 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 
 	public Action move(State s) {
 		controller.start();
+		// Your code here
+		
+		controller.stop();
 		return null;
 	}
 

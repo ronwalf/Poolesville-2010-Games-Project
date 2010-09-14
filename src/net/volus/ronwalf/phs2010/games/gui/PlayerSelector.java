@@ -1,11 +1,38 @@
+/*
+Copyright (c) 2010 Ron Alford <ronwalf@volus.net>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 package net.volus.ronwalf.phs2010.games.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
@@ -28,9 +55,12 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 	GamePlayer<State, Action> player;
 	
 	
-	public PlayerSelector(Game<State, Action> game, SearchController controller) {
+	public PlayerSelector(int turn, Game<State, Action> game, SearchController controller) {
+		super(new BorderLayout());
 		this.game = game;
 		this.controller = controller;
+		
+		setBorder(BorderFactory.createTitledBorder("Player " + turn));
 		
 		final List<String> players = PlayerFactoryRegistry.listFactories();
 		playerName = players.get(0);
@@ -44,7 +74,7 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 			}
 			
 		});
-		add(playerSelect);
+		add(playerSelect, BorderLayout.CENTER);
 		
 		
 		final List<String> functions = game.heuristics();
@@ -59,8 +89,9 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 			}
 			
 		});
-		add(functionSelect);
+		add(functionSelect, BorderLayout.SOUTH);
 		
+		unHighlight();
 		renewPlayer();
 	}
 	
@@ -74,6 +105,15 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 		HeuristicFunction<State> function = game.getHeuristic( heuristicName );
 		player = PlayerFactoryRegistry.getFactory(playerName).createPlayer(
 				game.getTransition(), function, controller);
+	}
+
+
+	public void highlight() {
+		this.setBackground(Color.WHITE);
+	}
+	
+	public void unHighlight() {
+		setBackground(Color.LIGHT_GRAY);
 	}
 	
 }

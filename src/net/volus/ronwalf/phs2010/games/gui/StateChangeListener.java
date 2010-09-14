@@ -24,15 +24,14 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.core;
+package net.volus.ronwalf.phs2010.games.gui;
 
-public interface SearchController {
+public interface StateChangeListener<State> {
+
+	public void stateChanged(State s);
 	
-	public void check() throws StoppedException;
+	public void stateBusy();
 	
-	public boolean isStopped();
+	public void stateUnbusy();
 	
-	public void start();
-	
-	public void stop();
 }
