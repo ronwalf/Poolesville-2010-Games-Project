@@ -47,6 +47,7 @@ import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 
 public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
+	JFrame frame;
 	BoardPanel<TicTacCell> bpanel;
 	TitledBorder boardTitle;
 	
@@ -59,9 +60,9 @@ public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
 	}
 
 	public void run() {
-		JFrame f = new JFrame("Reversi!");
+		frame = new JFrame("Reversi!");
 		JPanel p = new JPanel(new BorderLayout());
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         
         Game<ReversiState, TicTacMove> reversi = ReversiGame.instance;
  
@@ -86,9 +87,9 @@ public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
 		
 		stateChanged(reversi.getInitialState());
 		
-		f.add(p);
-        f.setSize(800,600);
-        f.setVisible(true);
+		frame.add(p);
+        frame.setSize(800,600);
+        frame.setVisible(true);
         
 	}
 
@@ -99,13 +100,13 @@ public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
 	public void stateChanged(ReversiState state) {
 		double[] score = ReversiTransition.instance.score( state );
 		if (score == null) {
-			boardTitle.setTitle("Turn: " + 
+			frame.setTitle("Reversi! Turn: " + 
 					TicTacCell.values()[state.playerTurn()].toString().toUpperCase());
 		} else if (score[0] == score[1]) {
-			boardTitle.setTitle("Game tie!");
+			frame.setTitle("Reversi! Game tie!");
 		} else {
 			TicTacCell winner = score[0] > score[1] ? TicTacCell.X : TicTacCell.O;
-			boardTitle.setTitle("Congratulations " + winner.toString().toUpperCase() + "!");
+			frame.setTitle("Reversi! Congratulations " + winner.toString().toUpperCase() + "!");
 		}
 		bpanel.setBoard(state.getBoard());
 	}

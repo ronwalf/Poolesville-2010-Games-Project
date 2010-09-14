@@ -30,6 +30,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,6 @@ import javax.swing.SwingUtilities;
 import net.volus.ronwalf.phs2010.games.core.Game;
 import net.volus.ronwalf.phs2010.games.core.GamePlayer;
 import net.volus.ronwalf.phs2010.games.core.PlayerState;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
 
 public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 	
@@ -49,9 +49,11 @@ public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 	private final Game<State, Action> game;
 	private State state;
 	
-	List<PlayerSelector<State, Action>> playerSelectors;
-	StopPanel stopPanel;
-	boolean keepRunning = false;
+	final private List<PlayerSelector<State, Action>> playerSelectors;
+	final private StopPanel stopPanel;
+	final private JButton run;
+	final private JButton runOnce;
+	private boolean keepRunning = false;
 	
 	
 	public PlayerManager(final Game<State, Action> game, final StateChangeListener<State> listener) {
@@ -76,7 +78,24 @@ public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 		this.game = game;
 		state = game.getInitialState();
 		
-		JButton runOnce = new JButton("Run Once");
+		run = new JButton("Run");
+		run.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				keepRunning = !keepRunning;
+				if (keepRunning) {
+					run.setText("Stop!");
+					startSearch();
+				} else {
+					run.setText("Run");
+					stopPanel.getController().stop();
+				}
+			}
+			
+		});
+		add(run, c);
+		
+		runOnce = new JButton("Run Once");
 		runOnce.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -98,7 +117,7 @@ public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 		});
 		add(reset, c);
 		
-		highlightTurn();
+		highlightTurn(state.playerTurn());
 	}
 	
 	public GamePlayer<State, Action> getPlayer(State s) {
@@ -112,30 +131,51 @@ public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 			if ( move.equals(a) ) {
 				state = game.getTransition().apply( state, a );
 				listener.stateChanged(state);
-				highlightTurn();
+				highlightTurn(state.playerTurn());
+				
 				return;
 			}
 		}
+		keepRunning = false;
 	}
 	
 	private void startSearch() {
 		listener.stateBusy();
+		runOnce.setEnabled(false);
+		
+		
 		Runnable search = new Runnable() {
 
 			public void run() {
+				do {
+					runOnce.setEnabled(true);
+					final Action move = getPlayer(state).move( state );
 				
-				final Action move = getPlayer(state).move( state );
 				
-				SwingUtilities.invokeLater(new Runnable(){
+				try {
+					SwingUtilities.invokeAndWait(new Runnable(){
 
-					public void run() {
-						listener.stateUnbusy();
-						if (move != null) {
-							move(move);
+						public void run() {
+							listener.stateUnbusy();
+							if (move != null) {
+								move(move);
+							} else {
+								keepRunning = false;
+							}
+							if (!keepRunning)
+								run.setText("Run");
+							
 						}
-					}
-					
-				});
+						
+					});
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				} while (keepRunning);
 			}
 			
 		};
@@ -143,9 +183,9 @@ public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 		
 	}
 	
-	private void highlightTurn() {
+	private void highlightTurn(int highlight) {
 		for (int i = 0; i < state.playerCount(); i++) {
-			if (i == state.playerTurn())
+			if (i == highlight)
 				playerSelectors.get(i).highlight();
 			else
 				playerSelectors.get(i).unHighlight();
