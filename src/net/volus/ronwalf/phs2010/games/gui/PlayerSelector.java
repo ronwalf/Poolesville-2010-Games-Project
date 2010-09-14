@@ -35,6 +35,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 import net.volus.ronwalf.phs2010.games.core.Game;
 import net.volus.ronwalf.phs2010.games.core.GamePlayer;
@@ -49,10 +50,15 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 	final Game<State, Action> game;
 	final SearchController controller;
 	
+	String playerDesc;
 	String playerName = null;
 	String heuristicName = null;
 	
 	GamePlayer<State, Action> player;
+	
+	TitledBorder border;
+	
+	
 	
 	
 	public PlayerSelector(int turn, Game<State, Action> game, SearchController controller) {
@@ -60,7 +66,9 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 		this.game = game;
 		this.controller = controller;
 		
-		setBorder(BorderFactory.createTitledBorder("Player " + turn));
+		playerDesc = "Player " + turn;
+		border = BorderFactory.createTitledBorder("Player " + turn);
+		setBorder(border);
 		
 		final List<String> players = PlayerFactoryRegistry.listFactories();
 		playerName = players.get(0);
@@ -109,10 +117,14 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 
 
 	public void highlight() {
-		this.setBackground(Color.WHITE);
+		border.setTitle(playerDesc + " (Ready)");
+		setBorder(border);
+		setBackground(Color.WHITE);
 	}
 	
 	public void unHighlight() {
+		border.setTitle(playerDesc);
+		setBorder(border);
 		setBackground(Color.LIGHT_GRAY);
 	}
 	

@@ -50,8 +50,7 @@ public class BoardPanel<E> extends JPanel {
 			
 			addMouseListener(new MouseAdapter(){
 	            public void mousePressed(MouseEvent e){
-	            	System.out.println("Clicked!");
-	                if (listener != null) {
+	            	if (listener != null) {
 	                	listener.cellPressed(Cell.this);
 	                }
 	            }
