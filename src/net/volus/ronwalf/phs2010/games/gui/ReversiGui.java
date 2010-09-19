@@ -39,8 +39,10 @@ import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.BestNextMoveFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.MinimaxFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.RandomMoveFactory;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiCombinedHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiCountHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
@@ -123,6 +125,8 @@ public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
 		RandomMoveFactory.register();
 		
 		ReversiCountHeuristic.register();
+		ReversiSafeHeuristic.register();
+		ReversiCombinedHeuristic.register(0.4);
 		
 		
 		SwingUtilities.invokeLater(new ReversiGui());

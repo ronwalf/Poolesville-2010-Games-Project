@@ -148,33 +148,33 @@ public class PlayerManager<State extends PlayerState, Action> extends JPanel {
 
 			public void run() {
 				do {
-					runOnce.setEnabled(true);
-					final Action move = getPlayer(state).move( state );
-				
-				
-				try {
-					SwingUtilities.invokeAndWait(new Runnable(){
+					final Action move = getPlayer(state).move(state);
 
-						public void run() {
-							listener.stateUnbusy();
-							if (move != null) {
-								move(move);
-							} else {
-								keepRunning = false;
+					try {
+						SwingUtilities.invokeAndWait(new Runnable() {
+
+							public void run() {
+								if (move != null) {
+									move(move);
+								} else {
+									keepRunning = false;
+								}
+								if (!keepRunning) {
+									runOnce.setEnabled(true);
+									listener.stateUnbusy();
+									run.setText("Run");
+								}
+
 							}
-							if (!keepRunning)
-								run.setText("Run");
-							
-						}
-						
-					});
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+						});
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} while (keepRunning);
 			}
 			

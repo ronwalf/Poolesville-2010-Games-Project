@@ -67,7 +67,7 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 		this.controller = controller;
 		
 		playerDesc = "Player " + turn;
-		border = BorderFactory.createTitledBorder("Player " + turn);
+		border = BorderFactory.createTitledBorder(playerDesc);
 		setBorder(border);
 		
 		final List<String> players = PlayerFactoryRegistry.listFactories();

@@ -12,6 +12,7 @@
   </path>
 
   <path id="test.class.path">
+    <path refid="main.class.path"/>
     <pathelement location="${main.build}"/>
     <pathelement location="lib/junit-4.8.2.jar"/>
   </path>
@@ -34,6 +35,12 @@
     </javac>
   </target>
 
+  <target name="reversi" depends="build-main">
+    <java classname="net.volus.ronwalf.phs2010.games.gui.ReversiGui"
+      fork="yes" failonerror="true">
+      <classpath refid="test.class.path"/>
+    </java>
+  </target>
 
   <target name="test" depends="build-test">
     <junit fork="yes" haltonfailure="false" dir="." 

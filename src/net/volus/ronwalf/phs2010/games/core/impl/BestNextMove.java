@@ -29,7 +29,7 @@ public class BestNextMove<State extends PlayerState, Action> implements GamePlay
 		Action bestAction = null;
 		for (Action a : transition.enumerate( s )) {
 			State sa = transition.apply(s, a);
-			double[] score = transition.score(sa);
+			double[] score = evaluate(sa);
 			if (score == null)
 				score = heuristic.score(sa);
 			
@@ -39,6 +39,10 @@ public class BestNextMove<State extends PlayerState, Action> implements GamePlay
 		
 		controller.stop();
 		return bestAction;
+	}
+
+	public double[] evaluate(State s) {
+		return transition.score(s);
 	}
 
 }
