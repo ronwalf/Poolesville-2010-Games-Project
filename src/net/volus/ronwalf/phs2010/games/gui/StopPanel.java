@@ -46,7 +46,7 @@ import net.volus.ronwalf.phs2010.games.core.StoppedException;
 public class StopPanel extends JPanel {
 
 	private static final DecimalFormat df = new DecimalFormat("#.##");
-	private long waitMillis = 5 * 1000;
+	private long waitMillis = 500;
 	private long startTime;
 	private boolean stopped = true;
 	
@@ -93,7 +93,8 @@ public class StopPanel extends JPanel {
 		final JLabel label = new JLabel("Search time: " + defaultTime + " seconds");
 		add(label, c);
 		
-		final JSlider timeSlider = new JSlider(1, 120, defaultTime);
+		final JSlider timeSlider = new JSlider(1, 4*30, defaultTime);
+		timeSlider.setValue((int) (waitMillis/4));
 		timeSlider.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e) {
