@@ -30,6 +30,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -44,6 +45,7 @@ import net.volus.ronwalf.phs2010.games.core.StoppedException;
 
 public class StopPanel extends JPanel {
 
+	private static final DecimalFormat df = new DecimalFormat("#.##");
 	private long waitMillis = 5 * 1000;
 	private long startTime;
 	private boolean stopped = true;
@@ -91,13 +93,13 @@ public class StopPanel extends JPanel {
 		final JLabel label = new JLabel("Search time: " + defaultTime + " seconds");
 		add(label, c);
 		
-		final JSlider timeSlider = new JSlider(1, 30, defaultTime);
+		final JSlider timeSlider = new JSlider(1, 120, defaultTime);
 		timeSlider.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e) {
-				int wtime = timeSlider.getValue();
-				waitMillis =wtime * 1000;
-				label.setText("Search time: " + wtime + " seconds");
+				waitMillis = timeSlider.getValue() * 250;
+				
+				label.setText("Search time: " + df.format(waitMillis/1000.0) + " seconds");
 			}
 			
 		});
