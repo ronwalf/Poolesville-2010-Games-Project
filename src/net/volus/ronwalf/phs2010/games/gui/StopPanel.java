@@ -30,6 +30,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -44,7 +45,9 @@ import net.volus.ronwalf.phs2010.games.core.StoppedException;
 
 public class StopPanel extends JPanel {
 
-	private long waitMillis = 5 * 1000;
+	private static final DecimalFormat df = new DecimalFormat("#.##");
+	private static final int sfrac = 4; // Fractions of a second to step the timeer
+	private long waitMillis = 500;
 	private long startTime;
 	private boolean stopped = true;
 	
@@ -84,20 +87,19 @@ public class StopPanel extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		
-		int defaultTime = 5;
-		
 		controller = new StopPanelController();
 		
-		final JLabel label = new JLabel("Search time: " + defaultTime + " seconds");
+		
+		final JLabel label = new JLabel("Search time: " + df.format(waitMillis/1000.0) + " seconds");
 		add(label, c);
 		
-		final JSlider timeSlider = new JSlider(1, 30, defaultTime);
+		final JSlider timeSlider = new JSlider(1, sfrac*10, (int) (sfrac*waitMillis/1000));
 		timeSlider.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e) {
-				int wtime = timeSlider.getValue();
-				waitMillis =wtime * 1000;
-				label.setText("Search time: " + wtime + " seconds");
+				waitMillis = timeSlider.getValue() * 1000 / sfrac;
+				
+				label.setText("Search time: " + df.format(waitMillis/1000.0) + " seconds");
 			}
 			
 		});
