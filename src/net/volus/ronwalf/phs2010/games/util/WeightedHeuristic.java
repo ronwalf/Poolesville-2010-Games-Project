@@ -24,34 +24,32 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.reversi;
+package net.volus.ronwalf.phs2010.games.util;
 
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
-import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
-import net.volus.ronwalf.phs2010.games.util.Board;
+import net.volus.ronwalf.phs2010.games.core.PlayerState;
 
-public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
-	public static final ReversiCountHeuristic instance = new ReversiCountHeuristic();
+public class WeightedHeuristic<State extends PlayerState> implements HeuristicFunction<State> {
+
+	private final Pair<HeuristicFunction<State>, Double>[] functions;
 	
-	public double[] score(ReversiState state) {
-		double total = 0;
-		double[] score = new double[]{0, 0};
-		
-		for (Board.Element<TicTacCell> cell : state.board) {
-			if (cell.isSet()) {
-				total++;
-				score[cell.elem.ordinal()]++;
+	public WeightedHeuristic(Pair<HeuristicFunction<State>, Double>... functions) {
+		this.functions = functions;
+	}
+	
+	public double[] score(State state) {
+		double[] score = new double[state.playerCount()];
+		for (int i = 0; i < functions.length; i++) {
+			double[] i_score = functions[i].x.score(state);
+			double w = functions[i].y;
+			for (int p = 0; p < state.playerCount(); p++) {
+				score[p] = i_score[p]*w;
 			}
 		}
-		
-		score[0] = 1.9*score[0]/total - .95;
-		score[1] = 1.9*score[1]/total - .95;
-		
 		return score;
 	}
 
-	public static void register() {
-		ReversiGame.instance.addHeuristic("count", instance);
+	public static <State> Pair<HeuristicFunction<State>, Double> pair(HeuristicFunction<State> f, double w) {
+		return new Pair<HeuristicFunction<State>, Double>(f, w);
 	}
-	
 }
