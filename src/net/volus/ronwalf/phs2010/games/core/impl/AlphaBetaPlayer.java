@@ -57,6 +57,8 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 			depth++;
 			best = dbest;
 		}
+		
+		System.out.println("Alpha-Beta search depth: " + depth);
 
 		controller.stop();
 		return best;
@@ -71,7 +73,7 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 		Action bestAction = null;
 		int turn = s.playerTurn();
 
-		for (Action action : transition.enumerate(s)) {
+		for (Action action : sortActions(s, transition.enumerate(s))) {
 			if (bestAction == null)
 				bestAction = action;
 			
@@ -107,13 +109,17 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 		}
 
 		int turn = s.playerTurn();
-		for (Action a : transition.enumerate(s)) {
+		for (Action a : sortActions(s, transition.enumerate(s))) {
 			double[] score = evaluate(transition.apply(s, a), d - 1, mybest);
 			if (score == null)
 				return null;
 
 			if (best == null || best[turn] < score[turn]) {
 				best = score;
+			}
+			
+			if (best[turn] > mybest[turn]) {
+				mybest[turn] = best[turn];
 			}
 			
 			if (best[turn] > bestFound[turn]) {
@@ -123,8 +129,10 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 						continue;
 					decreasesOthers &= best[i] < bestFound[i];
 				}
-				if (decreasesOthers)
+				if (decreasesOthers) {
+					//System.out.println("Pruning at " + d);
 					return best;
+				}
 			}
 			
 		}
@@ -134,22 +142,27 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 	}
 	
 	/**
-	 * Sorts actions by their heuristic value
+	 * Sorts actions by their heuristic value, best (biggest) value
+	 * for current player first.
 	 * @param s
 	 * @param actions
 	 * @return new sorted list
 	 */
 	private List<Action> sortActions(final State s, final List<Action> actions) {
+		if (actions.size() <= 1)
+			return actions;
+		
 		List<Pair<Double, Action>> paired = new ArrayList<Pair<Double,Action>>();
 		for (Action a : actions) {
 			State sa = transition.apply(s, a);
 			double[] score = transition.score(sa);
 			if (score == null)
 				score = function.score(sa);
-			paired.add(new Pair<Double,Action>(score[s.playerTurn()], a));
+			paired.add(new Pair<Double,Action>(-score[s.playerTurn()], a));
 		}
 		
 		Collections.sort(paired, new PairXComparator<Double, Action>());
+		//System.out.println("x1: " + paired.get(0).x + " x2: " + paired.get(1).x);
 		
 		List<Action> sorted = new ArrayList<Action>();
 		for (Pair<Double, Action> pair : paired) {

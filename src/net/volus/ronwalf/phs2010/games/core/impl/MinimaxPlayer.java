@@ -78,6 +78,8 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 			depth++;
 			best = dbest;
 		}
+		
+		System.out.println("Minimax search depth: " + depth);
 	
 		controller.stop();
 		return best;
