@@ -1,12 +1,17 @@
 package net.volus.ronwalf.phs2010.games.core.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import net.volus.ronwalf.phs2010.games.core.GamePlayer;
 import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
 import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.core.SearchController;
+import net.volus.ronwalf.phs2010.games.util.Pair;
+import net.volus.ronwalf.phs2010.games.util.PairXComparator;
 
 public class AlphaBetaPlayer<State extends PlayerState, Action>
  	implements GamePlayer<State, Action> {
@@ -42,6 +47,32 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 		System.arraycopy(best, 0, mybest, 0, best.length);
 		//TODO
 		return null;
+	}
+	
+	/**
+	 * Sorts actions by their heuristic value
+	 * @param s
+	 * @param actions
+	 * @return new sorted list
+	 */
+	private List<Action> sortActions(final State s, final List<Action> actions) {
+		List<Pair<Double, Action>> paired = new ArrayList<Pair<Double,Action>>();
+		for (Action a : actions) {
+			State sa = transition.apply(s, a);
+			double[] score = transition.score(sa);
+			if (score == null)
+				score = function.score(sa);
+			paired.add(new Pair<Double,Action>(score[s.playerTurn()], a));
+		}
+		
+		Collections.sort(paired, new PairXComparator<Double, Action>());
+		
+		List<Action> sorted = new ArrayList<Action>();
+		for (Pair<Double, Action> pair : paired) {
+			sorted.add(pair.y);
+		}
+		
+		return sorted;
 	}
 
 }
