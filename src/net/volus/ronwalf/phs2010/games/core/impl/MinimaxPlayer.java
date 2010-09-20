@@ -88,7 +88,7 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		return actions.get(best);
 	}
 	
-	private double[] evaluate(State s, int d) {
+	public double[] evaluate(State s, int d) {
 		double[] best = transition.score(s);
 		if (best != null) {
 			return best;
@@ -109,8 +109,4 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		return best;
 	}
 
-	public double[] evaluate(State s, int depth) {
-		// TODO
-		return null;
-	}
 }
