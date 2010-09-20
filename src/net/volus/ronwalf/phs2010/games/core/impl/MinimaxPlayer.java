@@ -27,6 +27,11 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		controller.stop();
 		return null;
 	}
+	
+	public Action move(State s, int depth) {
+		// TODO
+		return null;
+	}
 
 	public double[] evaluate(State s, int depth) {
 		// TODO
