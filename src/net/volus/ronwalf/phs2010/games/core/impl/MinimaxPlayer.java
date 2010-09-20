@@ -26,7 +26,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.core.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.volus.ronwalf.phs2010.games.core.GamePlayer;
@@ -53,44 +52,56 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		controller.start();
 
 		List<Action> actions = transition.enumerate(s);
+		
 		if (actions.isEmpty()) {
-			// Done!
+			controller.stop();
 			return null;
 		}
 		
-		List<State> states = new ArrayList<State>(actions.size());
-		for (int i = 0; i < actions.size(); i++) {
-			Action a = actions.get(i);
-			states.add(transition.apply(s, a));
+		// Silly special case
+		if (actions.size() == 1) {
+			controller.stop();
+			return actions.get(0);
 		}
-		
 		
 		int depth = 0;
-		double[][] scores = new double[actions.size()][];
-		do {
-			for (int i = 0; i < actions.size(); i++) { 
-				if (depth > 0 && controller.isStopped())
-					break;
-				scores[i] = evaluate(states.get(i), depth);
-			}
+		Action best = null;
+		
+		while (true) {
+			Action dbest = move(s, depth);
+			if (dbest == null)
+				break;
+			
 			depth++;
-		} while (!controller.isStopped());
-		
-		int best = 0;
-		int turn = s.playerTurn();
-		for (int i = 1; i < scores.length; i++) {
-			if (scores[best][turn] < scores[i][turn]) {
-				best = i;
-			}
+			best = dbest;
 		}
-		
+	
 		controller.stop();
-		return actions.get(best);
+		return best;
 	}
 
 	public Action move(State s, int depth) {
-		// TODO
-		return null;
+		Action best = null;
+		int turn = s.playerTurn();
+		double bestScore = Double.NEGATIVE_INFINITY;
+		
+
+		for (Action action : transition.enumerate(s)) {
+			if (best == null)
+				best = action;
+			
+			double[] aScore = evaluate(transition.apply(s, action), depth);
+			if (aScore == null)
+				return null;
+			
+			if (bestScore < aScore[turn]) {
+				best = action;
+				bestScore = aScore[turn];
+			}
+			
+		}
+		
+		return best;
 	}
 
 
@@ -100,13 +111,19 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 			return best;
 		}
 		
-		if (d <= 0 || controller.isStopped()) {
+		if (controller.isStopped())
+			return null;
+		
+		if (d <= 0) {
 			return function.score(s);
 		}
 		
 		int turn = s.playerTurn();
 		for (Action a : transition.enumerate(s)) {
 			double[] score = evaluate( transition.apply(s, a), d - 1);
+			if (score == null)
+				return null;
+			
 			if (best == null || best[turn] < score[turn]) {
 				best = score;
 			}
