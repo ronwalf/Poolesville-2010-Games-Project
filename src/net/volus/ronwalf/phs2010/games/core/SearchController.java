@@ -28,8 +28,6 @@ package net.volus.ronwalf.phs2010.games.core;
 
 public interface SearchController {
 	
-	public void check() throws StoppedException;
-	
 	public boolean isStopped();
 	
 	public void start();

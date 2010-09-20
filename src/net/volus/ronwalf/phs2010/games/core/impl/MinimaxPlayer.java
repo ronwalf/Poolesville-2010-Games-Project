@@ -28,4 +28,8 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		return null;
 	}
 
+	public double[] evaluate(State s, int depth) {
+		// TODO
+		return null;
+	}
 }
