@@ -40,6 +40,7 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 	private final GameTransition<State, Action> transition;
 	private final HeuristicFunction<State> function;
 	private final SearchController controller;
+	private boolean estimated;
 	
 	public MinimaxPlayer(GameTransition<State, Action> transition,
 			HeuristicFunction<State> function, SearchController controller) {
@@ -67,7 +68,9 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		int depth = 0;
 		Action best = null;
 		
-		while (true) {
+		estimated = true;
+		while (estimated) {
+			estimated = false;
 			Action dbest = move(s, depth);
 			if (dbest == null)
 				break;
@@ -115,6 +118,7 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 			return null;
 		
 		if (d <= 0) {
+			estimated = true;
 			return function.score(s);
 		}
 		
