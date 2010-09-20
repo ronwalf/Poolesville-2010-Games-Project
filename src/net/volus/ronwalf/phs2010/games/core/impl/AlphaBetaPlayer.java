@@ -11,9 +11,9 @@ import net.volus.ronwalf.phs2010.games.core.SearchController;
 public class AlphaBetaPlayer<State extends PlayerState, Action>
  	implements GamePlayer<State, Action> {
 
-	GameTransition<State, Action> transition;
-	HeuristicFunction<State> function;
-	SearchController controller;
+	private final GameTransition<State, Action> transition;
+	private final HeuristicFunction<State> function;
+	private final SearchController controller;
 	
 	public AlphaBetaPlayer(GameTransition<State, Action> transition,
 			HeuristicFunction<State> function, SearchController controller) {

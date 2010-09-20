@@ -31,6 +31,7 @@ import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
 import net.volus.ronwalf.phs2010.games.core.SearchController;
@@ -64,6 +65,24 @@ public class TestMinimaxPlayer {
 		long elapsed = System.currentTimeMillis() - start;
 		
 		assertTrue("Too much time elapsed!", elapsed < 1500);
+	}
+	
+	@Test
+	public void moveEndStateNull() {
+		SearchController controller = new UntimedController();
+		MinimaxPlayer<ReversiState, TicTacMove> player = 
+			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
+					ReversiCountHeuristic.instance,
+					controller);
+		
+		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
+				X,X,X,X));
+		
+		controller.start();
+		TicTacMove move = player.move(end);
+		controller.stop();
+		
+		assertNull(move);
 	}
 	
 	@Test
