@@ -24,28 +24,34 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.core.impl;
+package net.volus.ronwalf.phs2010.games.core.test;
 
-import net.volus.ronwalf.phs2010.games.core.GamePlayerFactory;
-import net.volus.ronwalf.phs2010.games.core.GameTransition;
-import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
-import net.volus.ronwalf.phs2010.games.core.PlayerFactoryRegistry;
-import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.core.SearchController;
+import net.volus.ronwalf.phs2010.games.core.StoppedException;
 
-public final class MinimaxFactory implements GamePlayerFactory {
+public class TimedController implements SearchController {
 
-	public static final MinimaxFactory instance = new MinimaxFactory();
+	private final long interval;
+	private long start;
 	
-	private MinimaxFactory() {}
+	public TimedController(long millis) {
+		interval = millis;
+	}
 	
-	public <State extends PlayerState, Action> MinimaxPlayer<State,Action> createPlayer(
-			GameTransition<State, Action> transition,
-			HeuristicFunction<State> function, SearchController controller) {
-		return new MinimaxPlayer<State, Action>(transition, function, controller);
+	public void check() throws StoppedException {
+		
 	}
 
-	public static void register() {
-		PlayerFactoryRegistry.addFactory("Minimax", instance);
+	public boolean isStopped() {
+		return System.currentTimeMillis() > start + interval;
 	}
+
+	public void start() {
+		start = System.currentTimeMillis();
+	}
+
+	public void stop() {
+		
+	}
+
 }

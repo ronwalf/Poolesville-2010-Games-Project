@@ -26,5 +26,9 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 		controller.stop();
 		return null;
 	}
+	
+	public double[] evaluate(State s, int d, double[] best) {
+		return null;
+	}
 
 }

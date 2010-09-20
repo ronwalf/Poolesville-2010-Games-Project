@@ -26,7 +26,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.core.impl;
 
-import net.volus.ronwalf.phs2010.games.core.GamePlayer;
 import net.volus.ronwalf.phs2010.games.core.GamePlayerFactory;
 import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
@@ -40,7 +39,7 @@ public final class AlphaBetaFactory implements GamePlayerFactory {
 	
 	private AlphaBetaFactory() {}
 	
-	public <State extends PlayerState, Action> GamePlayer<State, Action> createPlayer(
+	public <State extends PlayerState, Action> AlphaBetaPlayer<State, Action> createPlayer(
 			GameTransition<State, Action> transition,
 			HeuristicFunction<State> function, SearchController controller) {
 		return new AlphaBetaPlayer<State, Action>(transition, function, controller);
