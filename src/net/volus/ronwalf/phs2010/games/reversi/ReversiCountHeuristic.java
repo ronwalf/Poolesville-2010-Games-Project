@@ -34,20 +34,21 @@ public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
 	public static final ReversiCountHeuristic instance = new ReversiCountHeuristic();
 	
 	public double[] score(ReversiState state) {
-		double total = 0;
-		double[] score = new double[]{0, 0};
+		double count = 0;
 		
 		for (Board.Element<TicTacCell> cell : state.board) {
 			if (cell.isSet()) {
-				total++;
-				score[cell.elem.ordinal()]++;
+				if (cell.elem.ordinal() == 0)
+					count++;
+				else
+					count--;
 			}
 		}
 		
-		score[0] = 1.9*score[0]/total - .95;
-		score[1] = 1.9*score[1]/total - .95;
-		
-		return score;
+		int size = state.getBoard().getSize();
+		double val = ((double) count)/
+			((double) size * size);
+		return new double[]{val, -val};
 	}
 
 	public static void register() {
