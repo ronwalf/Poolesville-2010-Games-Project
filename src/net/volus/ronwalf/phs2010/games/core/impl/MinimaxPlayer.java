@@ -87,7 +87,13 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 		controller.stop();
 		return actions.get(best);
 	}
-	
+
+	public Action move(State s, int depth) {
+		// TODO
+		return null;
+	}
+
+
 	public double[] evaluate(State s, int d) {
 		double[] best = transition.score(s);
 		if (best != null) {
@@ -108,5 +114,4 @@ public class MinimaxPlayer<State extends PlayerState, Action>
 
 		return best;
 	}
-
 }
