@@ -170,7 +170,7 @@ public class TestStateEvaluatorImpl {
 		
 		double[] score = eval.evaluate(state);
 		// This value is a guess - let me know if you think it's wrong.
-		assertArrayEquals( new double[]{-1,1}, score, 0.001);
+		assertArrayEquals( new double[]{-ReversiTransition.winval,ReversiTransition.winval}, score, 0.001);
 	}
 	
 	@Test
@@ -184,7 +184,7 @@ public class TestStateEvaluatorImpl {
 		
 		double[] score = eval.evaluate(state);
 		// This value is a guess - let me know if you think it's wrong.
-		assertArrayEquals( new double[]{1,-1}, score, 0.001);
+		assertArrayEquals( new double[]{ReversiTransition.winval,-ReversiTransition.winval}, score, 0.001);
 	}
 	
 	@Ignore("Big...")
@@ -200,7 +200,7 @@ public class TestStateEvaluatorImpl {
 		
 		double[] score = eval.evaluate(state);
 		// ? Don't actually know the proper value.
-		assertArrayEquals( new double[]{1,-1}, score, 0.001);
+		assertArrayEquals( new double[]{ReversiTransition.winval,-ReversiTransition.winval}, score, 0.001);
 	}
 	
 	@Ignore("Big...")
@@ -217,7 +217,7 @@ public class TestStateEvaluatorImpl {
 		
 		double[] score = eval.evaluate(state);
 		// ? Don't actually know the proper value.
-		assertArrayEquals( new double[]{-1,1}, score, 0.001);
+		assertArrayEquals( new double[]{-ReversiTransition.winval,ReversiTransition.winval}, score, 0.001);
 	}
 	
 	
