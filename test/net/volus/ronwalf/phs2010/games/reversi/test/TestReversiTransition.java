@@ -27,6 +27,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.reversi.test;
 
 import static net.volus.ronwalf.phs2010.games.reversi.ReversiTransition.instance;
+import static net.volus.ronwalf.phs2010.games.reversi.ReversiTransition.winval;
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
 import static org.junit.Assert.assertArrayEquals;
@@ -79,7 +80,7 @@ public class TestReversiTransition {
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(2,
 				X, X,
 				O, null));
-		assertArrayEquals(new double[]{ 1, -1 }, instance.score( state ), 0.001 );
+		assertArrayEquals(new double[]{ winval, -winval }, instance.score( state ), 0.001 );
 	}
 	
 	@Test
@@ -87,7 +88,7 @@ public class TestReversiTransition {
 		ReversiState state = new ReversiState(1, new Board<TicTacCell>(2,
 				X, X,
 				O, null));
-		assertArrayEquals(new double[]{ 1, -1 }, instance.score( state ), 0.001 );
+		assertArrayEquals(new double[]{ winval, -winval }, instance.score( state ), 0.001 );
 	}
 	
 	@Test
@@ -95,7 +96,7 @@ public class TestReversiTransition {
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(2,
 				O, X,
 				O, null));
-		assertArrayEquals(new double[]{ -1, 1 }, instance.score( state ), 0.001 );
+		assertArrayEquals(new double[]{ -winval, winval }, instance.score( state ), 0.001 );
 	}
 	
 	@Test
@@ -103,7 +104,7 @@ public class TestReversiTransition {
 		ReversiState state = new ReversiState(1, new Board<TicTacCell>(2,
 				O, X,
 				O, null));
-		assertArrayEquals(new double[]{ -1, 1 }, instance.score( state ), 0.001 );
+		assertArrayEquals(new double[]{ -winval, winval }, instance.score( state ), 0.001 );
 	}
 	
 	@Test

@@ -38,6 +38,8 @@ import net.volus.ronwalf.phs2010.games.util.BoardPathIterator;
 
 public class ReversiTransition implements GameTransition<ReversiState, TicTacMove> {
 
+	public static final double winval = new Double(Long.MAX_VALUE);
+
 	public static final ReversiTransition instance = new ReversiTransition();
 	
 	/**
@@ -107,9 +109,9 @@ public class ReversiTransition implements GameTransition<ReversiState, TicTacMov
 		}
 		
 		if (count[0] < count[1]) {
-			return new double[]{-1, 1};
+			return new double[]{-winval, winval};
 		} else if (count[0] > count[1]) {
-			return new double[]{1, -1};
+			return new double[]{winval, -winval};
 		}
 		return new double[]{0, 0};
 	}
