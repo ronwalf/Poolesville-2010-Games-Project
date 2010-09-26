@@ -40,11 +40,11 @@ import net.volus.ronwalf.phs2010.games.core.impl.BestNextMoveFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.MinimaxFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.RandomMoveFactory;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiCombinedHeuristic;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiCountHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
+import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiCountHeuristic;
+import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 

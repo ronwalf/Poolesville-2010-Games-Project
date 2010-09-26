@@ -24,9 +24,11 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.reversi;
+package net.volus.ronwalf.phs2010.games.reversi.heuristics;
 
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
