@@ -50,6 +50,16 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 	}
 	
 	/**
+	 * @param Current player's number
+	 * @param Array of best individual scores the corresponding player has found.
+	 * @param Heuristic or evaluator score to check
+	 * @return Returns whether we can prune
+	 */
+	private boolean canPrune(final int turn, final double[] best, final double[] score) {
+		return false;
+	}
+	
+	/**
 	 * Sorts actions by their heuristic value
 	 * @param s
 	 * @param actions
