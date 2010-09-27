@@ -114,6 +114,9 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 			if (score == null)
 				return null;
 
+			if (canPrune( turn, bestFound, score) )
+				return score;
+			
 			if (best == null || best[turn] < score[turn]) {
 				best = score;
 			}
@@ -121,24 +124,26 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 			if (best[turn] > mybest[turn]) {
 				mybest[turn] = best[turn];
 			}
-			
-			if (best[turn] > bestFound[turn]) {
-				boolean decreasesOthers = true;
-				for (int i = 0; i < bestFound.length; i++) {
-					if (i == turn)
-						continue;
-					decreasesOthers &= best[i] < bestFound[i];
-				}
-				if (decreasesOthers) {
-					//System.out.println("Pruning at " + d);
-					return best;
-				}
-			}
-			
 		}
 
 		return best;
 
+	}
+	
+	/**
+	 * @param Current player's number
+	 * @param Array of best individual scores the corresponding player has found.
+	 * @param Heuristic or evaluator score to check
+	 * @return Returns whether we can prune
+	 */
+	private boolean canPrune(final int turn, final double[] bestFound, final double[] score) {
+		boolean pruneable = bestFound[turn] < score[turn];
+		for (int i = 0; i < bestFound.length; i++) {
+			if (i == turn)
+				continue;
+			pruneable &= bestFound[i] > score[i];
+		}
+		return pruneable;
 	}
 	
 	/**
