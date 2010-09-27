@@ -42,9 +42,9 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 		return null;
 	}
 	
-	public double[] evaluate(State s, int d, double[] best) {
-		double[] mybest = new double[best.length];
-		System.arraycopy(best, 0, mybest, 0, best.length);
+	public double[] evaluate(State s, int d, double[] bestFound) {
+		double[] mybest = new double[bestFound.length];
+		System.arraycopy(bestFound, 0, mybest, 0, bestFound.length);
 		//TODO
 		return null;
 	}
@@ -55,12 +55,12 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 	 * @param Heuristic or evaluator score to check
 	 * @return Returns whether we can prune
 	 */
-	private boolean canPrune(final int turn, final double[] best, final double[] score) {
+	private boolean canPrune(final int turn, final double[] bestFound, final double[] score) {
 		return false;
 	}
 	
 	/**
-	 * Sorts actions by their heuristic value
+	 * Sorts actions by the current turn's heuristic value (biggest first)
 	 * @param s
 	 * @param actions
 	 * @return new sorted list
