@@ -72,7 +72,7 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 			double[] score = transition.score(sa);
 			if (score == null)
 				score = function.score(sa);
-			paired.add(new Pair<Double,Action>(score[s.playerTurn()], a));
+			paired.add(new Pair<Double,Action>(-score[s.playerTurn()], a));
 		}
 		
 		Collections.sort(paired, new PairXComparator<Double, Action>());
