@@ -28,7 +28,7 @@ package net.volus.ronwalf.phs2010.games.core;
 
 import java.util.List;
 
-public interface GameTransition<State, Action> {
+public interface GameTransition<State extends PlayerState, Action> {
 
 	/**
 	 * Apply an action to a state to get back another state.

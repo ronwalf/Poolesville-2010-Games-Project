@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <project name="PHS Algorithms Game Project" default="test" basedir=".">
   <description>Skeletal project for student implementations</description>
- 
+
+  <property file="build.properties"/>
+
   <property name="main.src" location="src"/>
   <property name="main.build" location="build/main"/>
   <property name="test.src" location="test"/>
@@ -33,6 +35,16 @@
     <javac srcdir="${test.src}" destdir="${test.build}" debug="on">
       <classpath refid="test.class.path"/>
     </javac>
+  </target>
+
+  <target name="evaluate" depends="build-main">
+    <java classname="net.volus.ronwalf.phs2010.games.evaluation.Evaluate"
+      fork="yes" failonerror="true">
+      <classpath refid="test.class.path"/>
+      <syspropertyset>
+        <propertyref prefix="games.evaluate"/>
+      </syspropertyset>
+    </java>
   </target>
 
   <target name="reversi" depends="build-main">
