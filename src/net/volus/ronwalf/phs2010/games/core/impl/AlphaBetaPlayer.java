@@ -84,7 +84,7 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 			best = dbest;
 		}
 		
-		System.out.println("Alpha-Beta search depth: " + depth);
+		//System.out.println("Alpha-Beta search depth: " + depth);
 
 		controller.stop();
 		return best;
