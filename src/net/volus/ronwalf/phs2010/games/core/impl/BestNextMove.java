@@ -33,8 +33,10 @@ public class BestNextMove<State extends PlayerState, Action> implements GamePlay
 			if (score == null)
 				score = heuristic.score(sa);
 			
-			if (score[s.playerTurn()] > best)
+			if (score[s.playerTurn()] > best) {
+				best = score[s.playerTurn()];
 				bestAction = a;
+			}
 		}
 		
 		controller.stop();
