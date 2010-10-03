@@ -36,8 +36,8 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 	
 	// Note there's no best[] !
 	public Action move(State s, int depth) {
-		double[] best = new double[s.playerCount()];
-		Arrays.fill(best, Double.NEGATIVE_INFINITY);
+		double[] bestFound = new double[s.playerCount()];
+		Arrays.fill(bestFound, Double.NEGATIVE_INFINITY);
 		//TODO
 		return null;
 	}
