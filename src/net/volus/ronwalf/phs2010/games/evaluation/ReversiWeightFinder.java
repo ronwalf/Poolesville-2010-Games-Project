@@ -53,7 +53,7 @@ public class ReversiWeightFinder {
 	
 	static {
 		PREMOVES = 20;
-		GAMES = 50;
+		GAMES = 100;
 		MOVETIME = 50;
 		evaluator = new PlayerEvaluator<ReversiState, TicTacMove>(ReversiGame.instance, PREMOVES, GAMES);
 		evaluator.addPlayer(player(KevinHarrison2Heuristic.instance));
