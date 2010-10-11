@@ -63,6 +63,10 @@ public class PlayerEvaluator<State extends PlayerState, Action> {
 		
 		for (int i = 0; i < premoves; i++) {
 			state = transition.apply(state, random.move(state));
+			if (transition.score(state) != null) {
+				i = i/2;
+				state = game.getInitialState();
+			}
 		}
 		
 		return state;
