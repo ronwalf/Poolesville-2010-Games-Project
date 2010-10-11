@@ -29,37 +29,22 @@ package net.volus.ronwalf.phs2010.games.reversi.heuristics;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
+import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
-public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
-	public static final ReversiCountHeuristic instance = new ReversiCountHeuristic();
+public class ReversiMoveHeuristic implements HeuristicFunction<ReversiState> {
+	public static final ReversiMoveHeuristic instance = new ReversiMoveHeuristic();
 	
 	public double[] score(ReversiState state) {
-		int size = state.getBoard().getSize();
-		double val = 0;
-		
-		for (Board.Element<TicTacCell> cell : state.board) {
-			if (cell.isSet()) {
-				if (cell.elem.ordinal() == 0)
-					val += distance2(size, cell);
-				else
-					val -= distance2(size, cell);
-			}
-		}
-		return new double[]{val, -val};
-	}
-
-	private double distance2(int size, Board.Element<TicTacCell> elem) {
-		double mid = size / 2.0;
-		double xdist = elem.x - mid;
-		double ydist = elem.y - mid;
-		
-		return xdist*xdist + ydist*ydist;
+		double count = ReversiTransition.instance.enumerate(state).size();
+		if (state.playerTurn() == 0)
+			return new double[]{count, -count};
+		return new double[]{-count, count};
 	}
 
 	public static void register() {
-		ReversiGame.instance.addHeuristic("distance", instance);
+		ReversiGame.instance.addHeuristic("count", instance);
 	}
 	
 }

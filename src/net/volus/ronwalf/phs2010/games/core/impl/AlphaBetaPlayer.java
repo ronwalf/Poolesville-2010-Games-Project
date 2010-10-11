@@ -71,7 +71,7 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 		}
 
 		int depth = 0;
-		Action best = null;
+		Action best = actions.get(0);
 
 		estimated = true;
 		while (estimated) {

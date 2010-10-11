@@ -86,7 +86,7 @@ public class PlayerEvaluator<State extends PlayerState, Action> {
 	}
 	
 	
-	public double play(GamePlayer<State,Action> player) {
+	public int play(GamePlayer<State,Action> player) {
 		
 		int total = 0;
 		Random r = new Random();
@@ -94,7 +94,7 @@ public class PlayerEvaluator<State extends PlayerState, Action> {
 			total += play(player, players.get(r.nextInt(players.size())));
 		}
 		
-		return ((double) total) / ((double) games);
+		return total;
 	}
 	
 }

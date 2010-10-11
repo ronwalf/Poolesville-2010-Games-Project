@@ -35,16 +35,17 @@ import net.volus.ronwalf.phs2010.games.util.WeightedHeuristic;
 public class ReversiWeightedHeuristic {
 	
 	@SuppressWarnings("unchecked")
-	public static HeuristicFunction<ReversiState> create(double corner, double edge, double safe, double count) {
+	public static HeuristicFunction<ReversiState> create(double corner, double edge, double moves, double safe, double count) {
 		return new WeightedHeuristic<ReversiState>(
 				pair(ReversiCornerHeuristic.instance, corner),
 				pair(ReversiEdgeHeuristic.instance, edge),
+				pair(ReversiMoveHeuristic.instance, moves),
 				pair(ReversiSafeHeuristic.instance, safe),
-				pair(ReversiCountHeuristic.instance, count));
+				pair(ReversiDistanceHeuristic.instance, count));
 	}
 	
-	public static void register(double corner, double edge, double safe, double count) {
-		HeuristicFunction<ReversiState> heuristic = create(corner, edge, safe, count);
+	public static void register(double corner, double edge, double moves, double safe, double count) {
+		HeuristicFunction<ReversiState> heuristic = create(corner, edge, moves, safe, count);
 		ReversiGame.instance.addHeuristic("Weighted " + heuristic, heuristic);
 	}
 	

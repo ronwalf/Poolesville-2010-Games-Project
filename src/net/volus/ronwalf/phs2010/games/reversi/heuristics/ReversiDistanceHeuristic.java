@@ -32,34 +32,30 @@ import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.util.Board;
 
-public class ReversiCountHeuristic implements HeuristicFunction<ReversiState> {
-	public static final ReversiCountHeuristic instance = new ReversiCountHeuristic();
+public class ReversiDistanceHeuristic implements HeuristicFunction<ReversiState> {
+	public static final ReversiDistanceHeuristic instance = new ReversiDistanceHeuristic();
 	
 	public double[] score(ReversiState state) {
-		int size = state.getBoard().getSize();
-		double val = 0;
+		double count = 0;
 		
 		for (Board.Element<TicTacCell> cell : state.board) {
 			if (cell.isSet()) {
 				if (cell.elem.ordinal() == 0)
-					val += distance2(size, cell);
+					count++;
 				else
-					val -= distance2(size, cell);
+					count--;
 			}
 		}
+		
+		int size = state.getBoard().getSize();
+		double val = ((double) count)/
+			((double) size * size);
 		return new double[]{val, -val};
 	}
-
-	private double distance2(int size, Board.Element<TicTacCell> elem) {
-		double mid = size / 2.0;
-		double xdist = elem.x - mid;
-		double ydist = elem.y - mid;
-		
-		return xdist*xdist + ydist*ydist;
-	}
+	
 
 	public static void register() {
-		ReversiGame.instance.addHeuristic("distance", instance);
+		ReversiGame.instance.addHeuristic("count", instance);
 	}
 	
 }
