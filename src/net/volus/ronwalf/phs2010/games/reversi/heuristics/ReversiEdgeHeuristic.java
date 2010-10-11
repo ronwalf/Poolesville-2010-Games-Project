@@ -38,7 +38,7 @@ public class ReversiEdgeHeuristic implements HeuristicFunction<ReversiState> {
 	
 	public double[] score(ReversiState state) {
 		double count = 0;
-		int last = state.getBoard().getSize();
+		int last = state.getBoard().getSize() - 1;
 		for (int[] params : new int[][] { 
 				{0,0,0,1},
 				{0,0,1,0},

@@ -26,34 +26,26 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.games.reversi.heuristics;
 
+import static net.volus.ronwalf.phs2010.games.util.WeightedHeuristic.pair;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
-import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
+import net.volus.ronwalf.phs2010.games.util.WeightedHeuristic;
 
-public class ReversiCornerHeuristic implements HeuristicFunction<ReversiState> {
-	public static final ReversiCornerHeuristic instance = new ReversiCornerHeuristic();
+public class ReversiWeightedHeuristic {
 	
-	public double[] score(ReversiState state) {
-		double count = 0;
-		final int last = state.getBoard().getSize() - 1;
-		for (int[] coord : new int[][] { { 0, 0 }, { 0, last }, { last, 0 }, { last, last } }) {
-			TicTacCell cell = state.getBoard().get(coord[0], coord[1]);
-			if (cell == null)
-				continue;
-			
-			if (cell.ordinal() == 0)
-				count++;
-			else
-				count--;
-
-		}
-		
-		return new double[]{count, -count};
+	@SuppressWarnings("unchecked")
+	public static HeuristicFunction<ReversiState> create(double corner, double edge, double safe, double count) {
+		return new WeightedHeuristic<ReversiState>(
+				pair(ReversiCornerHeuristic.instance, corner),
+				pair(ReversiEdgeHeuristic.instance, edge),
+				pair(ReversiSafeHeuristic.instance, safe),
+				pair(ReversiCountHeuristic.instance, count));
 	}
-
-	public static void register() {
-		ReversiGame.instance.addHeuristic("count", instance);
+	
+	public static void register(double corner, double edge, double safe, double count) {
+		HeuristicFunction<ReversiState> heuristic = create(corner, edge, safe, count);
+		ReversiGame.instance.addHeuristic("Weighted " + heuristic, heuristic);
 	}
 	
 }

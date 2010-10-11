@@ -75,6 +75,8 @@ public class PlayerEvaluator<State extends PlayerState, Action> {
 		while ((action = (state.playerTurn() == 0 ? player0 : player1).move(state)) != null) {
 			state = transition.apply(state, action);
 		}
+		if (transition.score(state) == null)
+			System.out.println(state);
 		double p0s = transition.score( state )[0];
 		if (p0s == 0)
 			return 0;
