@@ -30,8 +30,6 @@ import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
-import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
-import net.volus.ronwalf.phs2010.games.util.Board;
 
 public class ReversiMoveHeuristic implements HeuristicFunction<ReversiState> {
 	public static final ReversiMoveHeuristic instance = new ReversiMoveHeuristic();

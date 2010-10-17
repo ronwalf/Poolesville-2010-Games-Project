@@ -29,7 +29,11 @@ package net.volus.ronwalf.phs2010.games.evaluation;
 import java.util.Arrays;
 
 import net.volus.ronwalf.phs2010.games.core.GamePlayer;
+import net.volus.ronwalf.phs2010.games.core.GameTransition;
 import net.volus.ronwalf.phs2010.games.core.HeuristicFunction;
+import net.volus.ronwalf.phs2010.games.core.PlayerState;
+import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaFactory;
+import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaPlayer;
 import net.volus.ronwalf.phs2010.games.core.impl.BestNextMoveFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.RandomMoveFactory;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
@@ -40,10 +44,27 @@ import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiCountHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiWeightedHeuristic;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
+import net.volus.ronwalf.phs2010.games.util.DummyController;
 import net.volus.ronwalf.phs2010.games.util.SimpleController;
 
 public class ReversiWeightFinder {
 
+	private static class FixedDepthPlayer<State extends PlayerState, Action> implements GamePlayer<State, Action> {
+
+		private final int depth;
+		private final AlphaBetaPlayer<State, Action> player;
+		
+		public FixedDepthPlayer(GameTransition<State,Action> transition, HeuristicFunction<State> heuristic, int depth) {
+			this.depth = depth;
+			player = AlphaBetaFactory.instance.createPlayer(transition, heuristic, new DummyController());
+		}
+		
+		public Action move(State s) {
+			return player.move(s, depth);
+		}
+		
+	}
+	
 	private final static int PREMOVES;
 	private final static int GAMES;
 	private final static long MOVETIME;
@@ -52,14 +73,14 @@ public class ReversiWeightFinder {
 	private final static PlayerEvaluator<ReversiState, TicTacMove> evaluator;
 	
 	static {
-		PREMOVES = 20;
+		PREMOVES = 10;
 		GAMES = 100;
 		MOVETIME = 50;
 		evaluator = new PlayerEvaluator<ReversiState, TicTacMove>(ReversiGame.instance, PREMOVES, GAMES);
 		evaluator.addPlayer(player(KevinHarrison2Heuristic.instance));
-		evaluator.addPlayer(player(ReversiCountHeuristic.instance));
-		evaluator.addPlayer(player(ReversiSafeHeuristic.instance));
-		evaluator.addPlayer(RandomMoveFactory.instance.createPlayer(ReversiTransition.instance, null, new SimpleController(MOVETIME)));
+//		evaluator.addPlayer(player(ReversiCountHeuristic.instance));
+//		evaluator.addPlayer(player(ReversiSafeHeuristic.instance));
+//		evaluator.addPlayer(RandomMoveFactory.instance.createPlayer(ReversiTransition.instance, null, new SimpleController(MOVETIME)));
 		
 		STEP = 32;
 		DELTA = 1;
@@ -67,8 +88,12 @@ public class ReversiWeightFinder {
 	
 	
 	private static GamePlayer<ReversiState, TicTacMove> player(HeuristicFunction<ReversiState> heuristic) {
-		return BestNextMoveFactory.instance.createPlayer(
+		GamePlayer<ReversiState, TicTacMove> player = BestNextMoveFactory.instance.createPlayer(
 				ReversiTransition.instance,heuristic, new SimpleController(MOVETIME));
+//		GamePlayer<ReversiState, TicTacMove> player = new FixedDepthPlayer<ReversiState, TicTacMove>(
+//				ReversiTransition.instance,heuristic, 2);
+	
+		return player;
 	}
 	
 	public static int evaluate(double[] vertex) { 
@@ -89,13 +114,13 @@ public class ReversiWeightFinder {
 		while (step > DELTA) {
 			double oldW = weights[index];
 
-			weights[index] += step;
+//			weights[index] += step;
 			
 			score = evaluate(weights);
 			if ( score > maxscore ) {
 				maxscore = score;
 			} else {
-				weights[index] = oldW - step;
+//				weights[index] = oldW - step;
 				score = evaluate(weights);
 				if (score > maxscore ) {
 					maxscore = score;
@@ -112,7 +137,7 @@ public class ReversiWeightFinder {
 	
 	
 	public static void main(String args[]) {
-		double[] weights = new double[]{50,20,10,1,5};
+		double[] weights = new double[]{1000000,1,10000,1000,0.5};
 		
 		for (int repeats = 0; repeats < 30; repeats++) {
 			for (int index = 0; index < weights.length; index++) {

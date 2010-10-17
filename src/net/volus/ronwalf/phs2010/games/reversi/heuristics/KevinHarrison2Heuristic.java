@@ -63,7 +63,15 @@ public class KevinHarrison2Heuristic implements HeuristicFunction<ReversiState> 
 	public static final KevinHarrison2Heuristic instance = new KevinHarrison2Heuristic();
 	
 	public KevinHarrison2Heuristic() {
-		this(new int[] {1,1,1000000,1000,-1000000,10000,2000});
+		this(new int[] {
+				1, // MIDDLE
+				1, // EDGE
+				1000000, // CORNER
+				1000, // SAFE_EXTRA
+				-1000000, // OPEN_CORNER_DIAGONAL_EXTRA
+				10000, // MOBILITY
+				2000 // POTENTIAL MOBILITY
+				});
 	}
 	
 	public KevinHarrison2Heuristic(int[] scores) {

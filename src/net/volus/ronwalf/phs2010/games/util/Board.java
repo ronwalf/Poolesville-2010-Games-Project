@@ -75,7 +75,6 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			return result;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -84,6 +83,7 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
+			@SuppressWarnings("rawtypes")
 			Element other = (Element) obj;
 			if (elem == null) {
 				if (other.elem != null)
@@ -201,7 +201,6 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -210,6 +209,7 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("rawtypes")
 		Board other = (Board) obj;
 		if (elements == null) {
 			if (other.elements != null)
