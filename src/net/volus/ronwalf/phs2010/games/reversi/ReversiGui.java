@@ -24,7 +24,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.games.gui;
+package net.volus.ronwalf.phs2010.games.reversi;
 
 import java.awt.BorderLayout;
 
@@ -39,13 +39,15 @@ import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.BestNextMoveFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.MinimaxFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.RandomMoveFactory;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiCombinedHeuristic;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
-import net.volus.ronwalf.phs2010.games.reversi.ReversiTransition;
-import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiCountHeuristic;
+import net.volus.ronwalf.phs2010.games.gui.BoardListener;
+import net.volus.ronwalf.phs2010.games.gui.BoardPanel;
+import net.volus.ronwalf.phs2010.games.gui.PlayerManager;
+import net.volus.ronwalf.phs2010.games.gui.StateChangeListener;
+import net.volus.ronwalf.phs2010.games.gui.BoardPanel.Cell;
+import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiDistanceHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
+import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCellPainter;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 
 public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
@@ -124,7 +126,7 @@ public class ReversiGui implements Runnable, StateChangeListener<ReversiState> {
 		AlphaBetaFactory.register();
 		RandomMoveFactory.register();
 		
-		ReversiCountHeuristic.register();
+		ReversiDistanceHeuristic.register();
 		ReversiSafeHeuristic.register();
 		ReversiCombinedHeuristic.register(0.4);
 		

@@ -39,7 +39,7 @@ import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaPlayer;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
-import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiCountHeuristic;
+import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiDistanceHeuristic;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacState;
@@ -55,7 +55,7 @@ public class TestAlphaBeta {
 		TimedController controller = new TimedController(1000);
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		long start = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
@@ -91,7 +91,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
@@ -111,7 +111,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
@@ -131,7 +131,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state1 = new ReversiState(1, new Board<TicTacCell>(3,
@@ -149,7 +149,7 @@ public class TestAlphaBeta {
 				new double[]{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY} );
 		controller.stop();
 		
-		double[] expected = ReversiCountHeuristic.instance.score(state2);
+		double[] expected = ReversiDistanceHeuristic.instance.score(state2);
 		assertArrayEquals(expected, pscore, 0.01);
 	}
 	
@@ -158,7 +158,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state1 = new ReversiState(0, new Board<TicTacCell>(3,
@@ -176,7 +176,7 @@ public class TestAlphaBeta {
 				new double[]{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY} );
 		controller.stop();
 		
-		double[] expected = ReversiCountHeuristic.instance.score(state2);
+		double[] expected = ReversiDistanceHeuristic.instance.score(state2);
 		assertArrayEquals(expected, pscore, 0.01);
 	}
 	
@@ -185,7 +185,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state = new ReversiState(1, new Board<TicTacCell>(3,
@@ -212,7 +212,7 @@ public class TestAlphaBeta {
 		SearchController controller = new UntimedController();
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(3,
@@ -276,11 +276,11 @@ public class TestAlphaBeta {
 	public void replace() {
 		SearchController controller = new UntimedController();
 		HeuristicFunction<ReversiState> worst
-			= new MagnifyHeuristic<ReversiState>(ReversiCountHeuristic.instance, -5.0);
+			= new MagnifyHeuristic<ReversiState>(ReversiDistanceHeuristic.instance, -5.0);
 		HeuristicFunction<ReversiState> bad 
 			= new BoardSwitchHeuristic<ReversiState>(
 					worst,
-					ReversiCountHeuristic.instance, 7);
+					ReversiDistanceHeuristic.instance, 7);
 					
 		AlphaBetaPlayer<ReversiState, TicTacMove> worstplayer = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
@@ -292,7 +292,7 @@ public class TestAlphaBeta {
 					controller);
 		AlphaBetaPlayer<ReversiState, TicTacMove> player = 
 			AlphaBetaFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		controller.start();

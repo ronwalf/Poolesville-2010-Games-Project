@@ -27,7 +27,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.reversi;
 
 import static net.volus.ronwalf.phs2010.games.util.WeightedHeuristic.pair;
-import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiCountHeuristic;
+import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiDistanceHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.util.WeightedHeuristic;
 
@@ -37,7 +37,7 @@ public class ReversiCombinedHeuristic {
 	public static void register(double w) {
 		ReversiGame.instance.addHeuristic("Weighted " + w, 
 				new WeightedHeuristic<ReversiState>(
-				pair(ReversiCountHeuristic.instance, w),
+				pair(ReversiDistanceHeuristic.instance, w),
 				pair(ReversiSafeHeuristic.instance, 1-w)));
 	}
 }

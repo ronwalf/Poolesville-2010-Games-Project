@@ -41,7 +41,7 @@ public class ReversiWeightedHeuristic {
 				pair(ReversiEdgeHeuristic.instance, edge),
 				pair(ReversiMoveHeuristic.instance, moves),
 				pair(ReversiSafeHeuristic.instance, safe),
-				pair(ReversiDistanceHeuristic.instance, count));
+				pair(ReversiCountHeuristic.instance, count));
 	}
 	
 	public static void register(double corner, double edge, double moves, double safe, double count) {

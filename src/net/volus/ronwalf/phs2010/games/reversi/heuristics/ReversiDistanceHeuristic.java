@@ -36,26 +36,30 @@ public class ReversiDistanceHeuristic implements HeuristicFunction<ReversiState>
 	public static final ReversiDistanceHeuristic instance = new ReversiDistanceHeuristic();
 	
 	public double[] score(ReversiState state) {
-		double count = 0;
+		int size = state.getBoard().size();
+		double val = 0;
 		
 		for (Board.Element<TicTacCell> cell : state.board) {
 			if (cell.isSet()) {
 				if (cell.elem.ordinal() == 0)
-					count++;
+					val += distance2(size, cell);
 				else
-					count--;
+					val -= distance2(size, cell);
 			}
 		}
-		
-		int size = state.getBoard().size();
-		double val = ((double) count)/
-			((double) size * size);
 		return new double[]{val, -val};
 	}
-	
+
+	private double distance2(int size, Board.Element<TicTacCell> elem) {
+		double mid = size / 2.0;
+		double xdist = elem.x - mid;
+		double ydist = elem.y - mid;
+		
+		return xdist*xdist + ydist*ydist;
+	}
 
 	public static void register() {
-		ReversiGame.instance.addHeuristic("count", instance);
+		ReversiGame.instance.addHeuristic("distance", instance);
 	}
 	
 }

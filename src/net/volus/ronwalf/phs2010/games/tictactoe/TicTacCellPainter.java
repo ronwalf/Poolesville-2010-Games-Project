@@ -1,4 +1,4 @@
-package net.volus.ronwalf.phs2010.games.gui;
+package net.volus.ronwalf.phs2010.games.tictactoe;
 
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.O;
 import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
@@ -6,7 +6,7 @@ import static net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell.X;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
+import net.volus.ronwalf.phs2010.games.gui.PiecePainter;
 
 public class TicTacCellPainter implements PiecePainter<TicTacCell> {
 

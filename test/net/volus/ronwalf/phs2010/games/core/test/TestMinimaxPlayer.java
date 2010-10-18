@@ -39,7 +39,7 @@ import net.volus.ronwalf.phs2010.games.core.impl.MinimaxFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.MinimaxPlayer;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiGame;
 import net.volus.ronwalf.phs2010.games.reversi.ReversiState;
-import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiCountHeuristic;
+import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiDistanceHeuristic;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacMove;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacState;
@@ -55,7 +55,7 @@ public class TestMinimaxPlayer {
 		TimedController controller = new TimedController(1000);
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		long start = System.currentTimeMillis();
@@ -72,7 +72,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
@@ -90,7 +90,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
@@ -109,7 +109,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState end = new ReversiState(0, new Board<TicTacCell>(2,
@@ -128,7 +128,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state1 = new ReversiState(1, new Board<TicTacCell>(3,
@@ -145,7 +145,7 @@ public class TestMinimaxPlayer {
 		double[] pscore = player.evaluate(state1, 1);
 		controller.stop();
 		
-		double[] expected = ReversiCountHeuristic.instance.score(state2);
+		double[] expected = ReversiDistanceHeuristic.instance.score(state2);
 		assertArrayEquals(expected, pscore, 0.01);
 	}
 	
@@ -154,7 +154,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state1 = new ReversiState(0, new Board<TicTacCell>(3,
@@ -171,7 +171,7 @@ public class TestMinimaxPlayer {
 		double[] pscore = player.evaluate(state1, 1);
 		controller.stop();
 		
-		double[] expected = ReversiCountHeuristic.instance.score(state2);
+		double[] expected = ReversiDistanceHeuristic.instance.score(state2);
 		assertArrayEquals(expected, pscore, 0.01);
 	}
 	
@@ -180,7 +180,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state = new ReversiState(1, new Board<TicTacCell>(3,
@@ -206,7 +206,7 @@ public class TestMinimaxPlayer {
 		SearchController controller = new UntimedController();
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		ReversiState state = new ReversiState(0, new Board<TicTacCell>(3,
@@ -265,11 +265,11 @@ public class TestMinimaxPlayer {
 	public void replace() {
 		SearchController controller = new UntimedController();
 		HeuristicFunction<ReversiState> worst
-			= new MagnifyHeuristic<ReversiState>(ReversiCountHeuristic.instance, -5.0);
+			= new MagnifyHeuristic<ReversiState>(ReversiDistanceHeuristic.instance, -5.0);
 		HeuristicFunction<ReversiState> bad 
 			= new BoardSwitchHeuristic<ReversiState>(
 					worst,
-					ReversiCountHeuristic.instance, 7);
+					ReversiDistanceHeuristic.instance, 7);
 					
 		MinimaxPlayer<ReversiState, TicTacMove> worstplayer = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
@@ -281,7 +281,7 @@ public class TestMinimaxPlayer {
 					controller);
 		MinimaxPlayer<ReversiState, TicTacMove> player = 
 			MinimaxFactory.instance.createPlayer(ReversiGame.instance.getTransition(), 
-					ReversiCountHeuristic.instance,
+					ReversiDistanceHeuristic.instance,
 					controller);
 		
 		controller.start();
