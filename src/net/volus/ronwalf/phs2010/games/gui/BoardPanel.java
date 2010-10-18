@@ -77,14 +77,14 @@ public class BoardPanel<E> extends JPanel {
 		this.painter = painter;
 		this.listener = null;
 		
-		GridLayout layout = new GridLayout(board.getSize(), board.getSize());
+		GridLayout layout = new GridLayout(board.size(), board.size());
 		layout.setHgap(2);
 		layout.setVgap(2);
 		setLayout(layout);
 		setBackground(Color.black);
 		
-		for (int i = 0; i < board.getSize(); i++) {
-			for (int j = 0; j < board.getSize(); j++) {
+		for (int i = 0; i < board.size(); i++) {
+			for (int j = 0; j < board.size(); j++) {
 				add(new Cell(i, j));
 			}	
 		}

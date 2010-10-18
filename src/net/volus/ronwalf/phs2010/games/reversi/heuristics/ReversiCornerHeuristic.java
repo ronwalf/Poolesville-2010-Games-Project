@@ -36,7 +36,7 @@ public class ReversiCornerHeuristic implements HeuristicFunction<ReversiState> {
 	
 	public double[] score(ReversiState state) {
 		double count = 0;
-		final int last = state.getBoard().getSize() - 1;
+		final int last = state.getBoard().size() - 1;
 		for (int[] coord : new int[][] { { 0, 0 }, { 0, last }, { last, 0 }, { last, last } }) {
 			TicTacCell cell = state.getBoard().get(coord[0], coord[1]);
 			if (cell == null)

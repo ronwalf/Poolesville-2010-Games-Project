@@ -49,8 +49,8 @@ public class BoardPathIterator<E>
 	}
 
 	public boolean hasNext() {
-		if (x >= 0 && x < board.getSize()
-				&& y >= 0 && y < board.getSize())
+		if (x >= 0 && x < board.size()
+				&& y >= 0 && y < board.size())
 			return true;
 		return false;
 	}

@@ -42,7 +42,7 @@ public class ReversiSafeHeuristic implements HeuristicFunction<ReversiState> {
 	public double[] score(ReversiState state) {
 		
 		double val = ((double) countSafer(state)) / 
-			((double) state.getBoard().getSize() * state.getBoard().getSize());
+			((double) state.getBoard().size() * state.getBoard().size());
 		return new double[] { val, -val };
 	}
 	

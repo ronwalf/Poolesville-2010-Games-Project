@@ -103,7 +103,7 @@ public class KevinHarrison2Heuristic implements HeuristicFunction<ReversiState> 
 	}
 
 	private double[] scoreProperty(ReversiState s) {
-		int size = s.board.getSize();
+		int size = s.board.size();
 		double[] scores = new double [2];
 		for(int y = 0; y < size; ++y)
 			for(int x = 0; x < size; ++x) {
@@ -188,7 +188,7 @@ public class KevinHarrison2Heuristic implements HeuristicFunction<ReversiState> 
 	//=======================
 
 	private int countPotentialMoves(ReversiState s, TicTacCell pcell) {
-		int size = s.board.getSize(), total = 0;
+		int size = s.board.size(), total = 0;
 		for(int y = 0; y < size; ++y)
 			for(int x = 0; x < size; ++x) {
 				TicTacCell c = s.board.get(x, y);

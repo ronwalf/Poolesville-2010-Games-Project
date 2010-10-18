@@ -48,9 +48,9 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 	public static class Element<E> {
 		
 
+		public final E elem;
 		public final int x;
 		public final int y;
-		public final E elem;
 		
 		public Element(int x, int y, E elem) {
 			this.x = x;
@@ -58,23 +58,6 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			this.elem = elem;
 		}
 		
-		public boolean isSet() { return elem != null; } 
-		
-		@Override
-		public String toString() {
-			return "Element [" + x + ", " + y + ", " + elem + "]";
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((elem == null) ? 0 : elem.hashCode());
-			result = prime * result + x;
-			result = prime * result + y;
-			return result;
-		}
-
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -95,12 +78,37 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			if (y != other.y)
 				return false;
 			return true;
+		} 
+		
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((elem == null) ? 0 : elem.hashCode());
+			result = prime * result + x;
+			result = prime * result + y;
+			return result;
+		}
+
+		public boolean isSet() { return elem != null; }
+
+		@Override
+		public String toString() {
+			return "Element [" + x + ", " + y + ", " + elem + "]";
 		}
 		
 	}
 	
-	final private int size;
 	final private List<E> elements;
+	final private int size;
+	
+	/**
+	 * Creates a shallow copy of the board.
+	 */
+	private Board(final Board<E> board) {
+		size = board.size();
+		elements = new ArrayList<E>(board.elements);
+	}
 	
 	/**
 	 * Creates an empty board
@@ -139,11 +147,57 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 	}
 	
 	/**
-	 * Creates a shallow copy of the board.
+	 * Creates a new board from this one with the given element changed.
 	 */
-	private Board(final Board<E> board) {
-		size = board.getSize();
-		elements = new ArrayList<E>(board.elements);
+	public Board<E> change(final int x, final int y, final E element) {
+		
+		if ( !contains(x,y) )
+			throw new IllegalArgumentException("Out of bounds board location");
+		
+		Board<E> board = new Board<E>(this);
+		board.elements.set(size*y + x, element);
+		return board;
+	}
+	
+	/**
+	 * Creates a new board from this one with the given element changed.
+	 */
+	public Board<E> change(final Pair<Integer,Integer> loc, final E element) {
+		return change(loc.x, loc.y, element);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("rawtypes")
+		Board other = (Board) obj;
+		if (elements == null) {
+			if (other.elements != null)
+				return false;
+		} else if (!elements.equals(other.elements))
+			return false;
+		if (size != other.size)
+			return false;
+		return true;
+	}
+	
+	/**
+	 * Returns true if board contains given point
+	 */
+	public boolean contains(int x, int y) {
+		return x >= 0 && x < size && y >= 0 && y < size;
+	}
+	
+	/**
+	 * Returns true if board contains given point
+	 */
+	public boolean contains(Pair<Integer,Integer> loc) {
+		return contains(loc.x, loc.y);
 	}
 	
 	/**
@@ -151,19 +205,26 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 	 */
 	public E get(int i, int j) {
 		return elements.get(i + j*size);
-	}
-	
-	public int getSize() { return size; }
-	
-	/**
-	 * Creates a new board from this one with the given element changed.
-	 */
-	public Board<E> change(final int x, final int y, final E element) {
-		Board<E> board = new Board<E>(this);
-		board.elements.set(size*y + x, element);
-		return board;
 	};
 	
+	/**
+	 * Return the element at (i,j)
+	 * @return
+	 */
+	public E get(Pair<Integer,Integer> loc) {
+		return get(loc.x, loc.y);
+	}
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((elements == null) ? 0 : elements.hashCode());
+		result = prime * result + size;
+		return result;
+	}
 	
 	public Iterator<Element<E>> iterator() {
 		return new Iterator<Element<E>>(){
@@ -190,36 +251,8 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 			
 		};
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((elements == null) ? 0 : elements.hashCode());
-		result = prime * result + size;
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		@SuppressWarnings("rawtypes")
-		Board other = (Board) obj;
-		if (elements == null) {
-			if (other.elements != null)
-				return false;
-		} else if (!elements.equals(other.elements))
-			return false;
-		if (size != other.size)
-			return false;
-		return true;
-	}
+	public int size() { return size; }
 	
 	@Override
 	public String toString() {

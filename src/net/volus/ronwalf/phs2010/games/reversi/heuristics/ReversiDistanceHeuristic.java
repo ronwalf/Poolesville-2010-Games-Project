@@ -47,7 +47,7 @@ public class ReversiDistanceHeuristic implements HeuristicFunction<ReversiState>
 			}
 		}
 		
-		int size = state.getBoard().getSize();
+		int size = state.getBoard().size();
 		double val = ((double) count)/
 			((double) size * size);
 		return new double[]{val, -val};

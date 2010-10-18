@@ -69,7 +69,7 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 	public double[] score(TicTacState s) {
 		TicTacCell winner = null;
 
-		for (int i = 0; i < s.board.getSize(); i++) {
+		for (int i = 0; i < s.board.size(); i++) {
 			
 			// Horizontal
 			winner = check(s.board, 0, i, 1, 0);
@@ -87,7 +87,7 @@ public class TicTacTransition implements GameTransition<TicTacState, TicTacMove>
 			winner = check(s.board, 0, 0, 1, 1);
 		
 		if (winner == null)
-			winner = check(s.board, 0, s.board.getSize() - 1, 1, -1);
+			winner = check(s.board, 0, s.board.size() - 1, 1, -1);
 		
 		if (winner == null) {
 			for ( Board.Element<TicTacCell> element : s.board ) {
