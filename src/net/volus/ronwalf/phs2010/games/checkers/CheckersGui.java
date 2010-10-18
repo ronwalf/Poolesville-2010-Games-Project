@@ -95,12 +95,12 @@ public class CheckersGui implements Runnable, StateChangeListener<CheckersState>
 	public void stateChanged(CheckersState state) {
 		double[] score = CheckersTransition.instance.score( state );
 		if (score == null) {
-			frame.setTitle("Checkers! Turn: " + state.playerTurn());
+			frame.setTitle("Checkers Turn: " + state.playerTurn());
 		} else if (score[0] == score[1]) {
-			frame.setTitle("Checkers! Game tie!");
+			frame.setTitle("Checkers: Game tie!");
 		} else {
 			CheckersPiece winner = score[0] > score[1] ? CheckersPiece.Red : CheckersPiece.White;
-			frame.setTitle("Checkers! Congratulations " + winner.toString().toUpperCase() + "!");
+			frame.setTitle("Checkers: Congratulations " + winner.toString().toUpperCase() + "!");
 		}
 		bpanel.setBoard(state.getBoard());
 	}
