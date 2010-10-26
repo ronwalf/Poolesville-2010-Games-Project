@@ -92,6 +92,8 @@ public class Board<E> implements Iterable<Board.Element<E>>{
 
 		public boolean isSet() { return elem != null; }
 
+		public Pair<Integer,Integer> location() { return new Pair<Integer,Integer>(x,y); }
+		
 		@Override
 		public String toString() {
 			return "Element [" + x + ", " + y + ", " + elem + "]";

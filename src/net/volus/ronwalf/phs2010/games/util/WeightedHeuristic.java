@@ -43,7 +43,7 @@ public class WeightedHeuristic<State extends PlayerState> implements HeuristicFu
 			double[] i_score = functions[i].x.score(state);
 			double w = functions[i].y;
 			for (int p = 0; p < state.playerCount(); p++) {
-				score[p] = i_score[p]*w;
+				score[p] += i_score[p]*w;
 			}
 		}
 		return score;

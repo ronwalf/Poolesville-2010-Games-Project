@@ -33,16 +33,18 @@ import net.volus.ronwalf.phs2010.games.util.Pair;
 
 public class CheckersMove implements Iterable<CheckersCompass> {
 
+	private final boolean isJump;
 	private final CheckersCompass[] directions;
 	private final Pair<Integer,Integer> location;
 	
-	public CheckersMove(int x, int y, CheckersCompass... directions) {
+	public CheckersMove(int x, int y, boolean isJump, CheckersCompass... directions) {
 		this.location = new Pair<Integer,Integer>(x,y);
+		this.isJump = isJump;
 		this.directions = directions;
 	}
 	
-	public CheckersMove(Pair<Integer,Integer> loc, CheckersCompass... directions) {
-		this(loc.x, loc.y, directions);
+	public CheckersMove(Pair<Integer,Integer> loc, boolean isJump, CheckersCompass... directions) {
+		this(loc.x, loc.y, isJump, directions);
 	}
 	
 	@Override
@@ -54,6 +56,8 @@ public class CheckersMove implements Iterable<CheckersCompass> {
 		if (getClass() != obj.getClass())
 			return false;
 		CheckersMove other = (CheckersMove) obj;
+		if (isJump != other.isJump)
+			return false;
 		if (!Arrays.equals(directions, other.directions))
 			return false;
 		if (location == null) {
@@ -74,10 +78,14 @@ public class CheckersMove implements Iterable<CheckersCompass> {
 		return result;
 	}
 
+	public boolean isJump() { return isJump; }
+	
 	public Iterator<CheckersCompass> iterator() {
 		return Arrays.asList(directions).iterator();
 	}
 
+	public int length() { return directions.length; }
+	
 	public Pair<Integer, Integer> location() { return location; }
 
 }

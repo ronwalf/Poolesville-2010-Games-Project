@@ -109,7 +109,7 @@ public class CheckersGui implements Runnable, StateChangeListener<CheckersState>
 		bpanel.setEnabled(true);
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		
 		BestNextMoveFactory.register();
 		MinimaxFactory.register();

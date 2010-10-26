@@ -38,10 +38,10 @@ public class CheckersState implements PlayerState, BoardState<CheckersPiece> {
 			8, new CheckersPiece[]{
 		null, Red, null, Red, null, Red, null, Red,
 		Red, null, Red, null, Red, null, Red, null,
+		null, Red, null, Red, null, Red, null, Red,
 		null, null, null, null, null, null, null, null,
 		null, null, null, null, null, null, null, null,
-		null, null, null, null, null, null, null, null,
-		null, null, null, null, null, null, null, null,
+		White, null, White, null, White, null, White, null,
 		null, White, null, White, null, White, null, White,
 		White, null, White, null, White, null, White, null
 	}));

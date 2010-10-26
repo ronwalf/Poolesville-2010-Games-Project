@@ -47,21 +47,27 @@ public class CheckersTransition implements
 	private static final double TIE = 0;
 	private static final double WIN = Long.MAX_VALUE;
 	
-	private void addMoves(List<CheckersMove> moves, Board<CheckersPiece> b, CheckersPiece piece, int x, int y) {
+	private List<CheckersMove> addMoves(Board<CheckersPiece> b, CheckersPiece piece, int x, int y) {
+		List<CheckersMove> moves = new ArrayList<CheckersMove>();
 		Pair<Integer,Integer> loc = new Pair<Integer,Integer>(x, y);
-		for (CheckersCompass cc : piece) {
-			Pair<Integer,Integer> nloc = cc.apply(loc);
-			if (!b.contains(nloc))
-				continue;
-			
-			if (b.get(nloc) == null)
-				moves.add(new CheckersMove(loc, cc));
+		
+		for (List<CheckersCompass> move : findMoves( b, piece, loc)) {
+			moves.add(new CheckersMove(loc, false, move.toArray(new CheckersCompass[1])));
 		}
+		return moves;
+	}
+	
+	private List<CheckersMove> addJumps(Board<CheckersPiece> b, CheckersPiece piece, int x, int y) {
+		List<CheckersMove> moves = new ArrayList<CheckersMove>();
+		Pair<Integer,Integer> loc = new Pair<Integer,Integer>(x, y);
 		
 		for (List<CheckersCompass> jumps : findJumps( b, piece, loc)) {
 			if (!jumps.isEmpty())
-				moves.add(new CheckersMove(loc, jumps.toArray(new CheckersCompass[jumps.size()])));
+				moves.add(new CheckersMove(loc, true, jumps.toArray(new CheckersCompass[jumps.size()])));
 		}
+		
+		
+		return moves;
 	}
 
 	public CheckersState apply(CheckersState s, CheckersMove a) {
@@ -112,14 +118,39 @@ public class CheckersTransition implements
 		
 		for (Board.Element<CheckersPiece> elem : s.getBoard()) {
 			if (elem.isSet() && elem.elem.player() == s.playerTurn()) {
-				addMoves(moves, s.getBoard(), elem.elem, elem.x, elem.y);
+				moves.addAll( addJumps(s.getBoard(), elem.elem, elem.x, elem.y) );
+			}
+		}
+		
+		if (moves.size() > 0)
+			return moves;
+		
+		for (Board.Element<CheckersPiece> elem : s.getBoard()) {
+			if (elem.isSet() && elem.elem.player() == s.playerTurn()) {
+				moves.addAll( addMoves(s.getBoard(), elem.elem, elem.x, elem.y) );
 			}
 		}
 		
 		return moves;
 	}
 	
-	private List<List<CheckersCompass>> findJumps(Board<CheckersPiece> b, CheckersPiece piece, Pair<Integer,Integer> loc) {
+	/**
+	 * Returns singleton lists of the directions a piece can move (mirrors findJumps)
+	 */
+	public List<List<CheckersCompass>> findMoves(Board<CheckersPiece> b, CheckersPiece piece, Pair<Integer,Integer> loc) {
+		List<List<CheckersCompass>> moves = new ArrayList<List<CheckersCompass>>();
+		for (CheckersCompass cc : piece) {
+			Pair<Integer,Integer> nloc = cc.apply(loc);
+			if (!b.contains(nloc))
+				continue;
+			
+			if (b.get(nloc) == null)
+				moves.add(Collections.singletonList(cc));
+		}
+		return moves;
+	}
+	
+	public List<List<CheckersCompass>> findJumps(Board<CheckersPiece> b, CheckersPiece piece, Pair<Integer,Integer> loc) {
 		List<List<CheckersCompass>> jumps = new ArrayList<List<CheckersCompass>>();
 		
 		for (CheckersCompass cc : piece) {
