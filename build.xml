@@ -11,6 +11,9 @@
 
 
   <path id="main.class.path">
+    <pathelement location="lib/apache-mina-2.0.0/mina-core-2.0.0.jar"/>
+    <pathelement location="lib/slf4j/slf4j-api-1.6.1.jar"/>
+    <pathelement location="lib/slf4j/slf4j-jdk14-1.6.1.jar"/>
   </path>
 
   <path id="test.class.path">
