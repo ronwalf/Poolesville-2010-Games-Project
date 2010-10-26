@@ -42,10 +42,18 @@ import net.volus.ronwalf.phs2010.games.util.Pair;
 public class CheckersTransition implements
 		GameTransition<CheckersState, CheckersMove> {
 
-	public static final CheckersTransition instance = new CheckersTransition();
+	public static final CheckersTransition instance = new CheckersTransition(false);
+	public static final CheckersTransition forcedmove = new CheckersTransition(true);
+
 	
 	private static final double TIE = 0;
 	private static final double WIN = Long.MAX_VALUE;
+	
+	private final boolean force;
+	
+	public CheckersTransition(boolean force) {
+		this.force = force;
+	}
 	
 	private List<CheckersMove> addMoves(Board<CheckersPiece> b, CheckersPiece piece, int x, int y) {
 		List<CheckersMove> moves = new ArrayList<CheckersMove>();
@@ -122,7 +130,7 @@ public class CheckersTransition implements
 			}
 		}
 		
-		if (moves.size() > 0)
+		if (force && moves.size() > 0)
 			return moves;
 		
 		for (Board.Element<CheckersPiece> elem : s.getBoard()) {
