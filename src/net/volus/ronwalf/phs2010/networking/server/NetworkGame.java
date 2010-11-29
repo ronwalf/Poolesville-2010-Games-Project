@@ -98,7 +98,8 @@ public class NetworkGame implements GameClientListener {
 						GameResult result = MessageFactory.instance.gameResult(name, msg);
 						player.send(result);
 					}
-
+					
+					state = null;
 					server.gameFinished(this);
 					return;
 				}
@@ -121,7 +122,7 @@ public class NetworkGame implements GameClientListener {
 	public void gameClientDisconnect(GameClient client) {
 		int offender = -1;
 		for (int i = 0; i < players.length; i++) {
-			if (players[i].equals(client)) {
+			if (players[i] != null && players[i].equals(client)) {
 				offender = i;
 			}
 		}
