@@ -1,0 +1,14 @@
+<!-- Server ant file -->
+<project name="game-server" basedir="." default="run-server">
+  <import file="build.xml"/>
+
+  <property name="server.port" value="15337"/>
+
+  <target name="run-server" depends="build-main">
+    <java classname="net.volus.ronwalf.phs2010.networking.server.GameServer"
+        fork="yes" failonerror="true">
+      <classpath refid="test.class.path"/>
+      <arg value="${server.port}"/>
+    </java>
+  </target>
+</project>
