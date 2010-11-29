@@ -78,6 +78,7 @@
     <zip destfile="phs-2010-games.zip">
       <zipfileset dir="." prefix="phs-2010-games">
         <include name="build.xml"/>
+        <include name="server.xml"/>
         <include name="README"/>
         <include name="LICENSE"/>
         <include name=".classpath"/>
