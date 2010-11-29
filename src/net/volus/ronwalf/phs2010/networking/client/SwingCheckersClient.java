@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -58,6 +59,7 @@ import net.volus.ronwalf.phs2010.games.util.Board;
 import net.volus.ronwalf.phs2010.games.util.SimpleController;
 import net.volus.ronwalf.phs2010.networking.client.SwingCheckersClientHandler.Callback;
 import net.volus.ronwalf.phs2010.networking.message.Ack;
+import net.volus.ronwalf.phs2010.networking.message.GameResult;
 import net.volus.ronwalf.phs2010.networking.message.GameState;
 import net.volus.ronwalf.phs2010.networking.message.Message;
 import net.volus.ronwalf.phs2010.networking.message.MessageVisitorAdapter;
@@ -330,9 +332,24 @@ public class SwingCheckersClient extends JFrame implements Callback {
         	}
         	
         	@Override
+        	public void visit(final GameResult result) {
+        		final String rstr = result.getMessage().replaceAll("\n", ", ");
+        		
+        		SwingUtilities.invokeLater(new Runnable() {
+        			public void run() {
+        				SwingCheckersClient.this.setTitle("Checkers! " + rstr);
+        			}
+        		});
+        	}
+        	
+        	@Override
         	public void visit(final GameState state) {
         		
-        		SwingCheckersClient.this.setTitle("Checkers! " + state.getTurn() + "'s turn");
+        		SwingUtilities.invokeLater(new Runnable() {
+        			public void run() {
+        				SwingCheckersClient.this.setTitle("Checkers! " + state.getTurn() + "'s turn");
+        			}
+        		});
         		
         		final CheckersState cstate = CheckersState.parse(state.getState());
         		boardP.setBoard(cstate.getBoard());
@@ -350,6 +367,8 @@ public class SwingCheckersClient extends JFrame implements Callback {
         			
         		}
         	}
+        	
+        	
         });
     }
 
