@@ -88,4 +88,10 @@ public class CheckersMove implements Iterable<CheckersCompass> {
 	
 	public Pair<Integer, Integer> location() { return location; }
 
+	@Override
+	public String toString() {
+		return "CheckersMove [isJump=" + isJump + ", directions="
+				+ Arrays.toString(directions) + ", location=" + location + "]";
+	}
+
 }

@@ -27,7 +27,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package net.volus.ronwalf.phs2010.games.checkers;
 
 import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.Red;
+import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.RedKing;
 import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.White;
+import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.WhiteKing;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.util.Board;
 import net.volus.ronwalf.phs2010.games.util.BoardState;
@@ -45,6 +51,27 @@ public class CheckersState implements PlayerState, BoardState<CheckersPiece> {
 		null, White, null, White, null, White, null, White,
 		White, null, White, null, White, null, White, null
 	}));
+	
+	public static CheckersState parse(String stateStr) {
+		String[] parts = stateStr.trim().split(":");
+		int turn = Integer.parseInt(parts[0]);
+		int counter = Integer.parseInt(parts[1]);
+		
+		String elems = parts[2];
+		int size = new Double(Math.sqrt(new Integer(elems.length()).doubleValue())).intValue();
+		List<CheckersPiece> pieces = new ArrayList<CheckersPiece>();
+		for (int i = 0; i < elems.length(); i++) {
+			switch (elems.charAt(i)) {
+			case 'r' : pieces.add(Red); break;
+			case 'R' : pieces.add(RedKing); break;
+			case 'w' : pieces.add(White); break;
+			case 'W' : pieces.add(WhiteKing); break;
+			default : pieces.add(null);
+			}
+		}
+		
+		return new CheckersState( turn, counter, new Board<CheckersPiece>(size, pieces));
+	}
 	
 	private final Board<CheckersPiece> board;
 	private final int counter;
@@ -95,4 +122,23 @@ public class CheckersState implements PlayerState, BoardState<CheckersPiece> {
 
 	public int stalemateCounter() { return counter; }
 	
+	@Override
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append(turn);
+		buf.append(':');
+		buf.append(counter);
+		buf.append(':');
+		for (Board.Element<CheckersPiece> elem : board) {
+			if (!elem.isSet()) {
+				buf.append('.');
+			} else {
+				String c = elem.elem.player() == 0 ? "r" : "w";
+				if (elem.elem.isKing())
+					c = c.toUpperCase();
+				buf.append(c);
+			}
+		}
+		return buf.toString();
+	}
 }

@@ -19,7 +19,7 @@ public class RawMessageEncoder extends ProtocolEncoderAdapter {
 		RawMessage msg = (RawMessage) obj;
 		
 		// check to make sure content: delimited is in headers
-		if (!msg.getHeaders("content").contains("delimited"))
+		if (msg.getHeaders("content").isEmpty() && msg.getBody() != null)
 			msg.addHeader("content", "delimited");
 		
 		IoBuffer buf = IoBuffer.allocate(msg.toString().length()).setAutoExpand(true);
@@ -51,6 +51,8 @@ public class RawMessageEncoder extends ProtocolEncoderAdapter {
 			buf.putString(delimiter.getValue(), encoder);
 		}
 		
+		buf.flip();
+		output.write(buf);
 	}
 
 }

@@ -24,73 +24,51 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.volus.ronwalf.phs2010.networking.raw;
+package net.volus.ronwalf.phs2010.networking.message;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
 
-public class RawMessage {
+public class Ack extends BaseMessage  {
 
-	private String[] arguments;
-	private String body;
+	public static final String COMMAND = "ACK";
+	public static final String INREPL = "In-Reply-To";
 	
-	private String command;
-	private Map<String, List<String>> headers;
+	public static final int SUCCESS = 200;
+	public static final int FAIL = 500;
 	
-	public RawMessage(String command, String... arguments) {
-		this.command = command;
-		this.arguments = arguments;
-		headers = new HashMap<String, List<String>>();
-		body = null;
+	public Ack(RawMessage raw) {
+		super(raw);
 	}
 	
-	public void addHeader(String header, String value) {
-		List<String> values;
-		if (!headers.containsKey(header)) {
-			values = new ArrayList<String>(1);
-			headers.put(header, values);
-		} else {
-			values = headers.get(header);
-		}
-		values.add(value);
+	public Ack(String id, String replyId, int code) {
+		super(id, COMMAND, Integer.toString(code));
+		getRawMessage().addHeader(INREPL, replyId);
 	}
 	
 	
-	public List<String> getArguments() {
-		return Collections.unmodifiableList(Arrays.asList(arguments));
+	
+	public String inReplyTo() {
+		return getRawMessage().getHeaders(INREPL).get(0);
 	}
 	
-	public String getBody() {
-		return body;
+	public int getCode() { return Integer.parseInt(getRawMessage().getArguments().get(0)); }
+	
+	public String getMessage() {
+		return getRawMessage().getBody();
 	}
 	
-	public String getCommand() {
-		return command;
+	public void setMessage(String body) {
+		getRawMessage().setBody(body);
 	}
-	
-	public Set<String> getHeaderFields() {
-		return Collections.unmodifiableSet(headers.keySet());
-	}
-	
-	public List<String> getHeaders(String header) {
-		if (!headers.containsKey(header))
-			return Collections.emptyList();
-		return Collections.unmodifiableList(headers.get(header));
-	}
-	
-	public void setBody(String body) {
-		this.body = body;
+
+	public void accept(MessageVisitor visitor) {
+		visitor.visit(this);
 	}
 
 	@Override
 	public String toString() {
-		return "RawMessage [command=" + command + ", arguments="
-				+ Arrays.toString(arguments) + ", headers=" + headers
-				+ ", body=" + body + "]";
+		return "Ack [getCode()=" + getCode() + ", inReplyTo()=" + inReplyTo()
+				+ ", getMessage()=" + getMessage() + "]";
 	}
+
 }

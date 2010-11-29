@@ -1,5 +1,7 @@
 package net.volus.ronwalf.phs2010.networking.raw;
 
+import java.util.Arrays;
+
 import org.apache.mina.core.session.AttributeKey;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
@@ -19,7 +21,8 @@ public class RawMessageDecoder extends TextLineDecoder {
 			public RawStateMachine addLine(String line) {
 				line = line.trim();
 				if (line.length() != 0) {
-					String command = line.split("\\s+", 1)[0];
+					String command = line.replaceFirst("\\s.*$","");
+					//System.err.println("Command: " + command);
 					String[] parts = line.replaceFirst("\\S+", "").trim().split("\\s+");
 					msg = new RawMessage(command, parts);
 					return new RawHeaderMachine();
@@ -32,7 +35,9 @@ public class RawMessageDecoder extends TextLineDecoder {
 			public RawStateMachine addLine(String line) {
 				line = line.trim();
 				if (line.length() != 0) {
-					String[] parts = line.split(":",2);
+					String[] parts = line.split(":\\s+",2);
+					//System.out.println("Parts: " + Arrays.toString(parts));
+					
 					String header = parts[0].trim();
 					String value = parts[1].trim();
 					msg.addHeader(header, value);
