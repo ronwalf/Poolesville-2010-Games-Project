@@ -25,4 +25,10 @@ public class GameMove extends BaseMessage {
 		visitor.visit(this);
 	}
 
+	@Override
+	public String toString() {
+		return "GameMove [getName()=" + getName() + ", getMove()=" + getMove()
+				+ "]";
+	}
+
 }

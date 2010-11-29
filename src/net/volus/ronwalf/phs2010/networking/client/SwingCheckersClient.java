@@ -100,7 +100,7 @@ public class SwingCheckersClient extends JFrame implements Callback {
     private NioSocketConnector connector;
 
     public SwingCheckersClient() {
-        super("Checkers Client based on Apache MINA");
+        super("Checkers!");
         
         connector = new NioSocketConnector();
 
@@ -278,6 +278,8 @@ public class SwingCheckersClient extends JFrame implements Callback {
         if (colonIndex > 0) {
             String host = s.substring(0, colonIndex);
             int port = parsePort(s.substring(colonIndex + 1));
+            System.out.println("Host: " + host);
+            System.out.println("Port: " + port);
             return new InetSocketAddress(host, port);
         } else {
             int port = parsePort(s.substring(colonIndex + 1));
@@ -329,6 +331,9 @@ public class SwingCheckersClient extends JFrame implements Callback {
         	
         	@Override
         	public void visit(final GameState state) {
+        		
+        		SwingCheckersClient.this.setTitle("Checkers! " + state.getTurn() + "'s turn");
+        		
         		final CheckersState cstate = CheckersState.parse(state.getState());
         		boardP.setBoard(cstate.getBoard());
         		if (state.getTurn().equals(client.getName())) {
