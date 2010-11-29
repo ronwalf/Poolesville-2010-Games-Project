@@ -40,4 +40,11 @@ public class GameState extends BaseMessage {
 		visitor.visit(this);
 	}
 
+	@Override
+	public String toString() {
+		return "GameState [getName()=" + getName() + ", getType()=" + getType()
+				+ ", getTurn()=" + getTurn() + ", getTimeLimit()="
+				+ getTimeLimit() + ", getState()=" + getState() + "]";
+	}
+
 }

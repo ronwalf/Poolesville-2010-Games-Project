@@ -26,4 +26,10 @@ public class GameResult extends BaseMessage {
 		visitor.visit(this);
 	}
 
+	@Override
+	public String toString() {
+		return "GameResult [getName()=" + getName() + ", getMessage()=\n"
+				+ getMessage() + "]";
+	}
+
 }
