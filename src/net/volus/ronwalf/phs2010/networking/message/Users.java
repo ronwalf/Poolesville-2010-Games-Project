@@ -26,17 +26,41 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.networking.message;
 
+import java.util.List;
+
 import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
 
-public class StartGameParser implements MessageParser {
+public class Users extends BaseMessage {
 
-public final static StartGameParser instance = new StartGameParser();
+	public static final String COMMAND = "USERS";
 	
-	public Message parseMessage(RawMessage raw) throws MessageParsingException {
-		if (raw.getArguments().size() == 1) {
-			return new StartGame(raw);
+	public static final String USER = "user";
+		
+	public Users(RawMessage raw) {
+		super(raw);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Users(String id, List<String> users) {
+		super(id, COMMAND);
+		for (String user : users) {
+			getRawMessage().addHeader(USER, user);
 		}
-		throw new MessageParsingException("Wrong number of arguments");
+		
+	}
+	
+	
+	public void accept(MessageVisitor visitor) {
+		visitor.visit(this);
+	}
+	
+	public List<String> users() {
+		return getRawMessage().getHeaders(USER);
+	}
+
+	@Override
+	public String toString() {
+		return "Users [users()=" + users() + "]";
 	}
 
 }

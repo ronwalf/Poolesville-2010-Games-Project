@@ -46,6 +46,7 @@ public interface MessageVisitor {
 	// Start Game
 	public void visit(StartGame startGame);
 	
-	
+	// User Listing
+	public void visit(Users users);
 	
 }

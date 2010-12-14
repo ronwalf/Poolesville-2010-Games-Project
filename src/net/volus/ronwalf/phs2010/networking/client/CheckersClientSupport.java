@@ -56,8 +56,9 @@ public class CheckersClientSupport {
         this.handler = handler;
     }
 
-    public boolean connect(NioSocketConnector connector, SocketAddress address,
+    public boolean connect(SocketAddress address,
             boolean useSsl) {
+    	NioSocketConnector connector = new NioSocketConnector();
         if (session != null && session.isConnected()) {
             throw new IllegalStateException(
                     "Already connected. Disconnect first.");
@@ -92,6 +93,7 @@ public class CheckersClientSupport {
             
             return true;
         } catch (Exception e) {
+        	e.printStackTrace();
             return false;
         }
     }

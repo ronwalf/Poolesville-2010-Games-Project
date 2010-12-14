@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -63,8 +62,7 @@ import net.volus.ronwalf.phs2010.networking.message.GameResult;
 import net.volus.ronwalf.phs2010.networking.message.GameState;
 import net.volus.ronwalf.phs2010.networking.message.Message;
 import net.volus.ronwalf.phs2010.networking.message.MessageVisitorAdapter;
-
-import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import net.volus.ronwalf.phs2010.networking.message.Users;
 
 /**
  * Simple chat client based on Swing & MINA that implements the chat protocol.
@@ -99,13 +97,11 @@ public class SwingCheckersClient extends JFrame implements Callback {
 
     private SwingCheckersClientHandler handler;
 
-    private NioSocketConnector connector;
-
+    
     public SwingCheckersClient() {
         super("Checkers!");
         
-        connector = new NioSocketConnector();
-
+        
         loginButton = new JButton(new LoginAction());
         loginButton.setText("Connect");
 //        quitButton = new JButton(new LogoutAction());
@@ -177,7 +173,6 @@ public class SwingCheckersClient extends JFrame implements Callback {
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 client.quit();
-                connector.dispose(); 
                 dispose();
             }
         });
@@ -207,7 +202,7 @@ public class SwingCheckersClient extends JFrame implements Callback {
             nameField.setText(name);
             serverField.setText(dialog.getServerAddress());
 
-            if (!client.connect(connector, address, dialog.isUseSsl())) {
+            if (!client.connect(address, dialog.isUseSsl())) {
                 JOptionPane.showMessageDialog(SwingCheckersClient.this,
                         "Could not connect to " + dialog.getServerAddress()
                                 + ". ");
@@ -366,6 +361,11 @@ public class SwingCheckersClient extends JFrame implements Callback {
         			new Thread(searchThread).start();
         			
         		}
+        	}
+        	
+        	@Override
+        	public void visit(final Users users) {
+        		
         	}
         	
         	
