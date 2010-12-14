@@ -29,6 +29,7 @@ package net.volus.ronwalf.phs2010.networking.message;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
@@ -97,5 +98,7 @@ public class MessageFactory {
 		return new StartGame(newId(), gameType);
 	}
 
- 
+	public Users users(List<String> users) {
+		return new Users(newId(), users);
+	}
 }

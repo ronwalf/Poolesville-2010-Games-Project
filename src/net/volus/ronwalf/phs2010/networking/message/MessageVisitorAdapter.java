@@ -51,5 +51,9 @@ public class MessageVisitorAdapter implements MessageVisitor {
 	public void visit(StartGame startGame) {
 		
 	}
+	
+	public void visit(Users users) {
+		
+	}
 
 }
