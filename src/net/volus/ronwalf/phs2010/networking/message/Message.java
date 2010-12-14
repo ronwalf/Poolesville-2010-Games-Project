@@ -26,6 +26,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.networking.message;
 
+import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
+
 public interface Message {
 	public void accept(MessageVisitor visitor);
+	public RawMessage getRawMessage();
 }
