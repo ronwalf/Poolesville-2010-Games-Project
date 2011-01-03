@@ -40,6 +40,7 @@ public class NetworkGame implements GameClientListener {
 	
 	private final GameServer server;
 	private final String type;
+	@SuppressWarnings("rawtypes")
 	private final Game game;
 	private PlayerState state;
 	private final String name;
@@ -47,7 +48,7 @@ public class NetworkGame implements GameClientListener {
 	private long timeLimit = 1000;
 	
 	
-	public NetworkGame(GameServer server, String type, Game game) {
+	public NetworkGame(GameServer server, String type, @SuppressWarnings("rawtypes") Game game) {
 		this.server = server;
 		this.type = type;
 		this.game = game;
@@ -74,6 +75,7 @@ public class NetworkGame implements GameClientListener {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void move(GameClient client, GameMove gmove) {
 		
 		int turn = state.playerTurn();
@@ -91,6 +93,9 @@ public class NetworkGame implements GameClientListener {
 				reply.setMessage("Move accepted");
 				client.send(reply);
 				
+
+				sendState();
+				
 				double[] score = game.getTransition().score(state);
 				if (score != null) {
 					String msg = scoreMessage(score);
@@ -104,7 +109,6 @@ public class NetworkGame implements GameClientListener {
 					return;
 				}
 				
-				sendState();
 				return;
 			}
 		}
@@ -151,11 +155,24 @@ public class NetworkGame implements GameClientListener {
 	}
 	
 	private String scoreMessage(double[] score) {
-		StringBuffer msg = new StringBuffer();
-		for (int i=0; i < players.length; i++) {
-			msg.append(players[i].getName()).append(':').append(score[i]).append('\n');
+		double max = score[0];
+		int maxi = 0;
+		
+		boolean tie = true;
+		for (int i=1; i < players.length; i++) {
+			if (max < score[i]) {
+				tie = false;
+				max = score[i];
+				maxi = i;
+			} else if (max > score[i]) {
+				tie = false;
+			}
+			
 		}
-		return msg.toString();
+
+		if (tie)
+			return "Tie!";
+		return players[maxi].getName() + " wins!";
 	}
 
 }

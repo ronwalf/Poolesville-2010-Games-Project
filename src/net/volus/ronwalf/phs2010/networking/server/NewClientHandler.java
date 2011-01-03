@@ -19,10 +19,7 @@ public class NewClientHandler extends MessageVisitorAdapter {
 	
 	@Override
 	public void visit(Login login) {
-		server.login(login.getUser(), session);
-		Ack reply =  MessageFactory.instance.reply(login, 200);
-		reply.setMessage("Successful login");
-		session.write(reply.getRawMessage());
+		server.login(login, session);
 	}
 
 }

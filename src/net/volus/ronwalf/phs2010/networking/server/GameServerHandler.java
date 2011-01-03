@@ -56,5 +56,9 @@ public class GameServerHandler implements IoHandler {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void send(Message message) {
+		
+	}
 
 }

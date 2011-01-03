@@ -58,6 +58,8 @@ public class GameClient extends MessageVisitorAdapter {
 		server.startGame(this, start);
 	}
 	
-
+	public String toString() {
+		return "Client " + getName() + " [" + session.getRemoteAddress() + "]";
+	}
 
 }

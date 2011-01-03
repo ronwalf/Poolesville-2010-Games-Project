@@ -28,16 +28,22 @@ package net.volus.ronwalf.phs2010.networking.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.volus.ronwalf.phs2010.games.checkers.CheckersGame;
 import net.volus.ronwalf.phs2010.games.core.Game;
+import net.volus.ronwalf.phs2010.games.util.Pair;
 import net.volus.ronwalf.phs2010.networking.message.Ack;
 import net.volus.ronwalf.phs2010.networking.message.GameMove;
+import net.volus.ronwalf.phs2010.networking.message.Login;
 import net.volus.ronwalf.phs2010.networking.message.MessageFactory;
 import net.volus.ronwalf.phs2010.networking.message.MessageVisitor;
 import net.volus.ronwalf.phs2010.networking.message.StartGame;
+import net.volus.ronwalf.phs2010.networking.message.Users;
 import net.volus.ronwalf.phs2010.networking.raw.RawMessageCodecFactory;
 
 import org.apache.mina.core.filterchain.IoFilter;
@@ -50,6 +56,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 public class GameServer {
 	
+	@SuppressWarnings("rawtypes")
 	public final static Map<String, Game> gameTypes = new HashMap<String, Game>();
 	
 	static {
@@ -75,7 +82,7 @@ public class GameServer {
 
 	
 	private Map<IoSession, GameClient> sessions;
-	private NetworkGame incompleteGame;
+	private List<Pair<GameClient, StartGame>> waiting;
 	private Map<String, NetworkGame> games;
 
 	
@@ -83,6 +90,7 @@ public class GameServer {
 	public GameServer() {
 		sessions = new HashMap<IoSession, GameClient>();
 		games = new HashMap<String, NetworkGame>();
+		waiting = new ArrayList<Pair<GameClient, StartGame>>();
 	}
 	
 	
@@ -98,16 +106,42 @@ public class GameServer {
 		games.remove(game.getName());
 	}
 
-	public void login(String user, IoSession session) {
+	public void login(Login login, IoSession session) {
+		String user = login.getUser();
+		for (GameClient client : sessions.values()) {
+			if (client.getName().equals(user)) {
+				Ack ack = MessageFactory.instance.reply(login, 500);
+				ack.setMessage("Already logged in: " + client);
+				session.write(ack.getRawMessage());
+				session.close(true);
+				return;
+			}
+		}
+		
 		sessions.put(session, new GameClient(this, session, user));
+		Ack ack = MessageFactory.instance.reply(login, 200);
+		ack.setMessage("Logged in as: " + sessions.get(session));
+		session.write(ack.getRawMessage());
+		updateUsers();
 	}
 	
 	
 	public void logout(IoSession session) {
 		if (sessions.containsKey(session)) {
 			GameClient client = sessions.get(session);
+			sessions.remove(session);
 			client.logout();
+			for (Iterator<Pair<GameClient,StartGame>> iter = waiting.iterator(); iter.hasNext();) {
+				GameClient waitingClient = iter.next().x;
+				if (waitingClient.equals(client))
+					iter.remove();
+			}
+			updateUsers();
 		}
+		
+		
+		
+		
 	}
 	
 	public void move(GameClient client, GameMove move) {
@@ -124,18 +158,60 @@ public class GameServer {
 	}
 	
 	public void startGame(GameClient client, StartGame start) {
+		@SuppressWarnings("rawtypes")
 		Game game = gameTypes.get(start.getType());
-		
-		// TODO correct matching for games start types.
-		
-		if (incompleteGame == null) {
-			incompleteGame = new NetworkGame(this, start.getType(), game);
+		if (game == null) {
+			Ack ack = MessageFactory.instance.reply(start, 500);
+			ack.setMessage("Game not available: " + start.getType());
+			client.send(ack);
+			return;
 		}
 		
-		boolean complete = incompleteGame.join(client);
-		if (complete) {
-			games.put(incompleteGame.getName(), incompleteGame);
-			incompleteGame = null;
+		
+		List<Pair<GameClient,StartGame>> players = new ArrayList<Pair<GameClient,StartGame>>();
+		for (Pair<GameClient, StartGame> pair : waiting) {
+			if ((start.opponents().isEmpty() || 
+					start.opponents().contains(pair.x.getName()))
+					&& (pair.y.opponents().isEmpty() || 
+							pair.y.opponents().contains(client.getName()))) {
+				players.add(pair);
+				
+			}
+		}
+		
+		Ack ack = MessageFactory.instance.reply(start, 200);
+		if (players.size() + 1 >= game.getInitialState().playerCount()) {
+			ack.setMessage("Starting game now");
+			client.send(ack);
+			NetworkGame ngame = new NetworkGame(this, start.getType(), game);
+			games.put(ngame.getName(), ngame);
+			if (ngame.join(client))
+				return;
+			for (Pair<GameClient, StartGame> pair : players) {
+				waiting.remove(pair);
+				if (ngame.join(pair.x)) {
+					return;
+				}
+			}
+			
+		}
+		else {
+			ack.setMessage("Waiting for match");
+			client.send(ack);
+			waiting.add(new Pair<GameClient,StartGame>(client,start));
+		}
+
+		
+	}
+	
+	private void updateUsers() {
+		ArrayList<String> usernames = new ArrayList<String>();
+		for (GameClient client : sessions.values()) {
+			usernames.add(client.getName());
+		}
+		Users users = MessageFactory.instance.users(usernames);
+		for (GameClient client : sessions.values()) {
+			client.send(users);
 		}
 	}
 }
