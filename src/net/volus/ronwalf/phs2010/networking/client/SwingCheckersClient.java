@@ -35,7 +35,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -91,9 +90,9 @@ public class SwingCheckersClient extends JFrame implements Callback {
     
     private JTextArea area;
 
-    private JScrollBar scroll;
-
     private CheckersClientSupport client;
+    
+    private OpponentSelector opponents;
 
     private SwingCheckersClientHandler handler;
 
@@ -139,14 +138,15 @@ public class SwingCheckersClient extends JFrame implements Callback {
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.LINE_AXIS));
         p.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        JPanel left = new JPanel();
+        
+        JPanel center = new JPanel();
         //left.setLayout(new BoxLayout(left, BoxLayout.PAGE_AXIS));
-        left.setLayout( new BorderLayout() );
-		left.add(boardP, BorderLayout.CENTER);
+        center.setLayout( new BorderLayout() );
+        
+		center.add(boardP, BorderLayout.CENTER);
 		//left.add(Box.createRigidArea(new Dimension(0, 5)));
 		//left.add(Box.createHorizontalGlue());
-		left.add(scrollPane, BorderLayout.SOUTH);
+		center.add(scrollPane, BorderLayout.SOUTH);
 //        left.add(Box.createRigidArea(new Dimension(0, 5)));
 //        left.add(Box.createHorizontalGlue());
 //        left.add(inputText);
@@ -163,7 +163,10 @@ public class SwingCheckersClient extends JFrame implements Callback {
         right.add(closeButton);
         right.add(Box.createVerticalGlue());
 
-        p.add(left);
+        opponents = new OpponentSelector();
+        p.add(new JScrollPane(opponents.getList()));
+        p.add(Box.createRigidArea(new Dimension(10, 0)));
+        p.add(center);
         p.add(Box.createRigidArea(new Dimension(10, 0)));
         p.add(right);
 
@@ -215,7 +218,7 @@ public class SwingCheckersClient extends JFrame implements Callback {
     	private static final long serialVersionUID = 1655291424630954560L;
     	
 		public void actionPerformed(ActionEvent e) {
-			client.startgame();
+			client.startgame(opponents.getOpponents());
 		}
     	
     }
@@ -365,7 +368,7 @@ public class SwingCheckersClient extends JFrame implements Callback {
         	
         	@Override
         	public void visit(final Users users) {
-        		
+        		opponents.setPlayers(users.users());
         	}
         	
         	

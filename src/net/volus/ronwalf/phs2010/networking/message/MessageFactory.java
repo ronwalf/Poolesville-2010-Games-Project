@@ -94,8 +94,8 @@ public class MessageFactory {
 		return parser.parseMessage(raw);
 	}
 
-	public StartGame startGame(String gameType) {
-		return new StartGame(newId(), gameType);
+	public StartGame startGame(String gameType, String... players) {
+		return new StartGame(newId(), gameType, players);
 	}
 
 	public Users users(List<String> users) {

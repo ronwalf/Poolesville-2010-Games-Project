@@ -20,10 +20,10 @@
 package net.volus.ronwalf.phs2010.networking.client;
 
 import java.net.SocketAddress;
+import java.util.List;
 
 import net.volus.ronwalf.phs2010.games.checkers.CheckersMove;
 import net.volus.ronwalf.phs2010.networking.message.GameMove;
-import net.volus.ronwalf.phs2010.networking.message.Message;
 import net.volus.ronwalf.phs2010.networking.message.MessageFactory;
 import net.volus.ronwalf.phs2010.networking.raw.RawMessageCodecFactory;
 
@@ -104,8 +104,10 @@ public class CheckersClientSupport {
     	session.write(MessageFactory.instance.login(name, "").getRawMessage());
     }
     
-    public void startgame() {
-    	session.write(MessageFactory.instance.startGame("checkers").getRawMessage());
+    public void startgame(List<String> opponents) {
+    	String[] opps = new String[opponents.size()];
+    	opps = opponents.toArray(opps);
+    	session.write(MessageFactory.instance.startGame("checkers", opps).getRawMessage());
     }
 
     public void quit() {
