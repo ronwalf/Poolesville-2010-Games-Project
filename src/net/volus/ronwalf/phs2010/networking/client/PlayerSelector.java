@@ -32,7 +32,6 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -47,18 +46,10 @@ import net.volus.ronwalf.phs2010.games.core.SearchController;
 public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 	
 	
-	final Game<State, Action> game;
+	private final Game<State, Action> game;
 	
-	String playerDesc;
-	String playerName = null;
-	String heuristicName = null;
-	
-	
-	TitledBorder border;
-	
-	JButton forceButton;
-	boolean stopped = false;
-	
+	private String playerName = null;
+	private String heuristicName = null;
 	
 	public PlayerSelector(Game<State, Action> game) {
 		super();
@@ -66,8 +57,7 @@ public class PlayerSelector<State extends PlayerState, Action> extends JPanel {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		setLayout(layout);
 		
-		playerDesc = "Player Settings";
-		border = BorderFactory.createTitledBorder(playerDesc);
+		TitledBorder border = BorderFactory.createTitledBorder("Player Settings");
 		setBorder(border);
 		
 		final List<String> players = PlayerFactoryRegistry.listFactories();

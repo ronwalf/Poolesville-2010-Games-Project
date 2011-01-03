@@ -89,6 +89,8 @@ public class SwingCheckersClient extends JFrame {
     private JTextArea area;
 
     private OpponentSelector opponents;
+    
+    private PlayerInfo<CheckersState> playerInfo;
 
     private SwingCheckersClientHandler handler;
     
@@ -106,6 +108,7 @@ public class SwingCheckersClient extends JFrame {
         startButton = new JButton(new StartGameAction());
         startButton.setText("Start Game");
         playerSelector = new PlayerSelector<CheckersState, CheckersMove>(CheckersGame.instance);
+        playerInfo = new PlayerInfo<CheckersState>();
         closeButton = new JButton(new QuitAction());
         closeButton.setText("Quit");
         boardP = new BoardPanel<CheckersPiece>(new Board<CheckersPiece>(8), CheckersPiecePainter.instance);
@@ -150,19 +153,25 @@ public class SwingCheckersClient extends JFrame {
 //        left.add(inputText);
 
         JPanel right = new JPanel();
-        right.setLayout(new BoxLayout(right, BoxLayout.PAGE_AXIS));
+        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
         right.add(loginButton);
 //        right.add(Box.createRigidArea(new Dimension(0, 5)));
 //        right.add(quitButton);
         right.add(startButton);
         right.add(playerSelector);
+        right.add(playerInfo);
         right.add(Box.createHorizontalGlue());
         right.add(Box.createRigidArea(new Dimension(0, 25)));
         right.add(closeButton);
         right.add(Box.createVerticalGlue());
 
         opponents = new OpponentSelector();
-        p.add(new JScrollPane(opponents.getList()));
+        JPanel left = new JPanel();
+        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+        left.add(new JScrollPane(opponents.getList()));
+        left.add(Box.createRigidArea(new Dimension(120,0)));
+        
+        p.add(left);
         p.add(Box.createRigidArea(new Dimension(10, 0)));
         p.add(center);
         p.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -307,20 +316,25 @@ public class SwingCheckersClient extends JFrame {
     	SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SwingCheckersClient.this.setTitle("Checkers! " + msg.getMessage());
+				playerInfo.gameFinished(msg);
 			}
 		});
     }
     
     public void setGameState(final GameState state) {
+    	
+    	final CheckersState cstate = CheckersState.parse(state
+				.getState());
+    	
     	SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SwingCheckersClient.this.setTitle("Checkers! "
 						+ state.getTurn() + "'s turn");
+				playerInfo.stateChanged(state, cstate);
 			}
 		});
 
-		final CheckersState cstate = CheckersState.parse(state
-				.getState());
+		
 		boardP.setBoard(cstate.getBoard());
 		if (state.getTurn().equals(username)) {
 			final GamePlayer<CheckersState, CheckersMove> player = playerSelector
@@ -342,7 +356,7 @@ public class SwingCheckersClient extends JFrame {
     public void setUsers(final Users users) {
     	SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				opponents.setPlayers(users.users());
+				opponents.setUsers(users.users());
 			}
     	});
     }
