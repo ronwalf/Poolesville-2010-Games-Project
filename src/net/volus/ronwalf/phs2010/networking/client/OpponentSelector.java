@@ -2,7 +2,6 @@ package net.volus.ronwalf.phs2010.networking.client;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -32,8 +30,10 @@ public class OpponentSelector implements ListSelectionListener {
 			setText(s);
 			
 			setForeground(list.getForeground());
-			if (index < selected.size()) {
-				if (players.contains(listItems.get(index)))
+			
+			String name = listItems.get(index);
+			if (selected.contains(name)) {
+				if (users.contains(name))
 					setBackground(Color.GREEN);
 				else
 					setBackground(Color.YELLOW);
@@ -50,10 +50,9 @@ public class OpponentSelector implements ListSelectionListener {
 
 	private JList list;
 	
-	private DefaultListModel model;
-	private Vector<String> listItems = new Vector();
+	private Vector<String> listItems = new Vector<String>();
 	private Set<String> selected = new TreeSet<String>();
-	private Set<String> players = new TreeSet<String>();
+	private Set<String> users = new TreeSet<String>();
 	
 	public OpponentSelector() {
 		
@@ -71,29 +70,35 @@ public class OpponentSelector implements ListSelectionListener {
 		return Collections.unmodifiableCollection(selected);
 	}
 
-	public void setPlayers(List<String> players) {
-		this.players = new TreeSet<String>(players);
+	public void setUsers(List<String> players) {
+		this.users = new TreeSet<String>(players);
 		update();
 	}
 	
 	private void update() {
-		listItems = new Vector<String>(selected);
-		for (String name : players) {
-			if (!selected.contains(name))
-				listItems.add(name);
-		}
+		//listItems = new Vector<String>(selected);
+		Set<String> combined = new TreeSet<String>(selected);
+		combined.addAll(users);
+		listItems = new Vector<String>(combined);
+//		for (String name : combined) {
+//			if (!selected.contains(name))
+//				listItems.add(name);
+//		}
+		listItems.add("          ");
 		list.setListData(listItems);
 	}
 	
 	public void valueChanged(ListSelectionEvent e) {
 		int index = list.getSelectedIndex();
-		if (index < 0)
+		if (index < 0 || index == listItems.size() - 1) 
 			return;
-		if (index < selected.size()) {
-			selected.remove(listItems.get(index));
+		String name = listItems.get(index);
+		
+		if (selected.contains(name)) {
+			selected.remove(name);
 		}
 		else {
-			selected.add(listItems.get(index));
+			selected.add(name);
 		}
 		update();
 	}
