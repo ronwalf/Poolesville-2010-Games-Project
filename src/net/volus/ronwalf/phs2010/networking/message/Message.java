@@ -30,5 +30,6 @@ import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
 
 public interface Message {
 	public void accept(MessageVisitor visitor);
+	public String getId();
 	public RawMessage getRawMessage();
 }

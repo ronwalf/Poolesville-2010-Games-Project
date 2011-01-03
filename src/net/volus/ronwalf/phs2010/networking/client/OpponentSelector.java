@@ -3,6 +3,8 @@ package net.volus.ronwalf.phs2010.networking.client;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -65,8 +67,8 @@ public class OpponentSelector implements ListSelectionListener {
 		return list;
 	}
 	
-	public List<String> getOpponents() { 
-		return new ArrayList<String>(selected);
+	public Collection<String> getOpponents() { 
+		return Collections.unmodifiableCollection(selected);
 	}
 
 	public void setPlayers(List<String> players) {

@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -55,12 +56,9 @@ import net.volus.ronwalf.phs2010.games.core.impl.RandomMoveFactory;
 import net.volus.ronwalf.phs2010.games.gui.BoardPanel;
 import net.volus.ronwalf.phs2010.games.util.Board;
 import net.volus.ronwalf.phs2010.games.util.SimpleController;
-import net.volus.ronwalf.phs2010.networking.client.SwingCheckersClientHandler.Callback;
-import net.volus.ronwalf.phs2010.networking.message.Ack;
 import net.volus.ronwalf.phs2010.networking.message.GameResult;
 import net.volus.ronwalf.phs2010.networking.message.GameState;
-import net.volus.ronwalf.phs2010.networking.message.Message;
-import net.volus.ronwalf.phs2010.networking.message.MessageVisitorAdapter;
+import net.volus.ronwalf.phs2010.networking.message.MessageFactory;
 import net.volus.ronwalf.phs2010.networking.message.Users;
 
 /**
@@ -68,7 +66,7 @@ import net.volus.ronwalf.phs2010.networking.message.Users;
  *
  * @author <a href="http://mina.apache.org">Apache MINA Project</a>
  */
-public class SwingCheckersClient extends JFrame implements Callback {
+public class SwingCheckersClient extends JFrame {
     private static final long serialVersionUID = 1538675161745436968L;
 
 //    private JTextField inputText;
@@ -90,11 +88,11 @@ public class SwingCheckersClient extends JFrame implements Callback {
     
     private JTextArea area;
 
-    private CheckersClientSupport client;
-    
     private OpponentSelector opponents;
 
     private SwingCheckersClientHandler handler;
+    
+    private String username;
 
     
     public SwingCheckersClient() {
@@ -175,7 +173,7 @@ public class SwingCheckersClient extends JFrame implements Callback {
 
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.quit();
+                handler.quit();
                 dispose();
             }
         });
@@ -198,14 +196,13 @@ public class SwingCheckersClient extends JFrame implements Callback {
 
             SocketAddress address = parseSocketAddress(dialog
                     .getServerAddress());
-            String name = dialog.getUsername();
+            username = dialog.getUsername();
 
             handler = new SwingCheckersClientHandler(SwingCheckersClient.this);
-            client = new CheckersClientSupport(name, handler);
-            nameField.setText(name);
+            nameField.setText(username);
             serverField.setText(dialog.getServerAddress());
 
-            if (!client.connect(address, dialog.isUseSsl())) {
+            if (!handler.connect(address, dialog.isUseSsl(), username)) {
                 JOptionPane.showMessageDialog(SwingCheckersClient.this,
                         "Could not connect to " + dialog.getServerAddress()
                                 + ". ");
@@ -218,7 +215,9 @@ public class SwingCheckersClient extends JFrame implements Callback {
     	private static final long serialVersionUID = 1655291424630954560L;
     	
 		public void actionPerformed(ActionEvent e) {
-			client.startgame(opponents.getOpponents());
+			Collection<String> opps = opponents.getOpponents();
+	    	handler.send(MessageFactory.instance.startGame("checkers", opps), 
+	    			SwingCheckersClientHandler.errorCloseBack);
 		}
     	
     }
@@ -241,8 +240,8 @@ public class SwingCheckersClient extends JFrame implements Callback {
         private static final long serialVersionUID = -6389802816912005370L;
 
         public void actionPerformed(ActionEvent e) {
-            if (client != null) {
-                client.quit();
+            if (handler != null) {
+                handler.quit();
             }
             SwingCheckersClient.this.dispose();
             System.exit(0);
@@ -264,7 +263,7 @@ public class SwingCheckersClient extends JFrame implements Callback {
         loginButton.setEnabled(false);
     }
 
-    private void append(String text) {
+    public void log(String text) {
         area.append(text);
     }
 
@@ -300,8 +299,52 @@ public class SwingCheckersClient extends JFrame implements Callback {
     }
 
     public void disconnected() {
-        append("Connection closed.\n");
+        log("Connection closed.\n");
         setLoggedOut();
+    }
+    
+    public void setGameFinished(final GameResult msg) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				SwingCheckersClient.this.setTitle("Checkers! " + msg.getMessage());
+			}
+		});
+    }
+    
+    public void setGameState(final GameState state) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				SwingCheckersClient.this.setTitle("Checkers! "
+						+ state.getTurn() + "'s turn");
+			}
+		});
+
+		final CheckersState cstate = CheckersState.parse(state
+				.getState());
+		boardP.setBoard(cstate.getBoard());
+		if (state.getTurn().equals(username)) {
+			final GamePlayer<CheckersState, CheckersMove> player = playerSelector
+					.getPlayer(new SimpleController(state
+							.getTimeLimit()));
+			Runnable searchThread = new Runnable() {
+
+				public void run() {
+					CheckersMove move = player.move(cstate);
+					handler.send(MessageFactory.instance.gameMove(state.getName(), move.toString()));
+				}
+
+			};
+			new Thread(searchThread).start();
+
+		}
+    }
+    
+    public void setUsers(final Users users) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				opponents.setPlayers(users.users());
+			}
+    	});
     }
 
     public void error(String message) {
@@ -310,70 +353,14 @@ public class SwingCheckersClient extends JFrame implements Callback {
 
     public void loggedIn() {
         setLoggedIn();
-        append("You have joined the server.\n");
+        log("You have joined the server.\n");
     }
 
     public void loggedOut() {
-        append("You have left the server.\n");
+        log("You have left the server.\n");
         setLoggedOut();
     }
 
-    public void messageReceived(Message message) {
-        append(message + "\n");
-        message.accept(new MessageVisitorAdapter() {
-        	
-        	@Override
-        	public void visit(Ack ack) {
-        		if (ack.getCode() == Ack.SUCCESS && ack.getMessage().contains("login")) {
-        			loggedIn();
-        		}
-        	}
-        	
-        	@Override
-        	public void visit(final GameResult result) {
-        		final String rstr = result.getMessage().replaceAll("\n", ", ");
-        		
-        		SwingUtilities.invokeLater(new Runnable() {
-        			public void run() {
-        				SwingCheckersClient.this.setTitle("Checkers! " + rstr);
-        			}
-        		});
-        	}
-        	
-        	@Override
-        	public void visit(final GameState state) {
-        		
-        		SwingUtilities.invokeLater(new Runnable() {
-        			public void run() {
-        				SwingCheckersClient.this.setTitle("Checkers! " + state.getTurn() + "'s turn");
-        			}
-        		});
-        		
-        		final CheckersState cstate = CheckersState.parse(state.getState());
-        		boardP.setBoard(cstate.getBoard());
-        		if (state.getTurn().equals(client.getName())) {
-        			final GamePlayer<CheckersState, CheckersMove> player = playerSelector.getPlayer(new SimpleController(state.getTimeLimit()));
-        			Runnable searchThread = new Runnable() {
-
-						public void run() {
-							CheckersMove move = player.move(cstate);
-							client.move(state.getName(), move);
-						} 
-        				
-        			};
-        			new Thread(searchThread).start();
-        			
-        		}
-        	}
-        	
-        	@Override
-        	public void visit(final Users users) {
-        		opponents.setPlayers(users.users());
-        	}
-        	
-        	
-        });
-    }
 
     public static void main(String[] args) {
     	

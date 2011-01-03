@@ -23,7 +23,8 @@ public class RawMessageDecoder extends TextLineDecoder {
 				if (line.length() != 0) {
 					String command = line.replaceFirst("\\s.*$","");
 					//System.err.println("Command: " + command);
-					String[] parts = line.replaceFirst("\\S+", "").trim().split("\\s+");
+					String args = line.substring(command.length()).trim();
+					String[] parts = args.length() > 0 ? args.split("\\s+") : new String[]{};
 					msg = new RawMessage(command, parts);
 					return new RawHeaderMachine();
 				}

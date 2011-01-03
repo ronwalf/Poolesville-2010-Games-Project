@@ -28,6 +28,7 @@ package net.volus.ronwalf.phs2010.networking.message;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,7 @@ public class MessageFactory {
 		parsers.put(GameState.COMMAND, GameStateParser.instance);
 		parsers.put(Login.COMMAND, LoginParser.instance);
 		parsers.put(StartGame.COMMAND, StartGameParser.instance);
+		parsers.put(Users.COMMAND, UsersParser.instance);
 	}
 	
 	private String newId() {
@@ -94,7 +96,8 @@ public class MessageFactory {
 		return parser.parseMessage(raw);
 	}
 
-	public StartGame startGame(String gameType, String... players) {
+	public StartGame startGame(String gameType, Collection<String> players) {
+		
 		return new StartGame(newId(), gameType, players);
 	}
 

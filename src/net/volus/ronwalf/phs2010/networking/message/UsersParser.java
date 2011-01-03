@@ -33,7 +33,7 @@ public class UsersParser implements MessageParser {
 	
 	public Message parseMessage(RawMessage raw) throws MessageParsingException {
 		if (raw.getArguments().size() != 0)
-			throw new MessageParsingException("Wrong number of arguments");
+			throw new MessageParsingException("Wrong number of arguments.  Expected 0, got '" + raw.getArguments().get(0)+"'");
 		
 		return new Users(raw);
 	}

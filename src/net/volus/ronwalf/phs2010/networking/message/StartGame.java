@@ -26,6 +26,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.networking.message;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
@@ -39,7 +40,7 @@ public class StartGame extends BaseMessage {
 		super(raw);
 	}
 
-	public StartGame(String id, String gameType, String... opponents) {
+	public StartGame(String id, String gameType, Collection<String> opponents) {
 		super(id, COMMAND, gameType);
 		for (String player : opponents) {
 			getRawMessage().addHeader(OPPONENT, player);

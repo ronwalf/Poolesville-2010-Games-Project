@@ -33,7 +33,7 @@ public class AckParser implements MessageParser {
 	
 	public Message parseMessage(RawMessage raw) throws MessageParsingException {
 		if (raw.getArguments().size() != 1)
-			throw new MessageParsingException("Wrong number of arguments");
+			throw new MessageParsingException("Wrong number of arguments.  Expected 1, got '" + raw.getArguments() + "'");
 		try{
 			Integer.parseInt(raw.getArguments().get(0));
 		} catch (NumberFormatException e) {
