@@ -26,22 +26,32 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.networking.message;
 
+import java.util.List;
+
 import net.volus.ronwalf.phs2010.networking.raw.RawMessage;
 
 public class StartGame extends BaseMessage {
 
 	public final static String COMMAND = "STARTGAME";
+	public final static String OPPONENT = "opponent";
 	
 	public StartGame(RawMessage raw) {
 		super(raw);
 	}
 
-	public StartGame(String id, String gameType) {
+	public StartGame(String id, String gameType, String... opponents) {
 		super(id, COMMAND, gameType);
+		for (String player : opponents) {
+			getRawMessage().addHeader(OPPONENT, player);
+		}
 	}
 	
 	public void accept(MessageVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	public List<String> opponents() {
+		return getRawMessage().getHeaders(OPPONENT);
 	}
 	
 	public String getType() {
