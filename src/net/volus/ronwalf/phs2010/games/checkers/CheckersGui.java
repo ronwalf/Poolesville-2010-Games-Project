@@ -35,6 +35,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import net.volus.ronwalf.phs2010.games.checkers.heuristics.CheckersCountHeuristic;
+import net.volus.ronwalf.phs2010.games.checkers.heuristics.RonsCheckersHeuristic;
 import net.volus.ronwalf.phs2010.games.core.Game;
 import net.volus.ronwalf.phs2010.games.core.impl.AlphaBetaFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.BestNextMoveFactory;
@@ -117,6 +118,7 @@ public class CheckersGui implements Runnable, StateChangeListener<CheckersState>
 		RandomMoveFactory.register();
 		
 		CheckersCountHeuristic.register();
+		RonsCheckersHeuristic.register();
 		
 		
 		SwingUtilities.invokeLater(new CheckersGui());
