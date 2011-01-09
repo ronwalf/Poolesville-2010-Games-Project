@@ -1,7 +1,5 @@
 package net.volus.ronwalf.phs2010.networking.raw;
 
-import java.util.Arrays;
-
 import org.apache.mina.core.session.AttributeKey;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;

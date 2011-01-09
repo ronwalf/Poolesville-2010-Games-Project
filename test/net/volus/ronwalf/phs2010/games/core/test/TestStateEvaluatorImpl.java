@@ -32,8 +32,6 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.util.Arrays;
 
-import net.volus.ronwalf.phs2010.games.core.GameTransition;
-import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.games.core.StateEvaluator;
 import net.volus.ronwalf.phs2010.games.core.StateEvaluatorFactory;
 import net.volus.ronwalf.phs2010.games.core.impl.StateEvalFactoryImpl;

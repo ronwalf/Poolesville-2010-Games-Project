@@ -26,6 +26,7 @@ public class Pair<X, Y> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("rawtypes")
 		Pair other = (Pair) obj;
 		if (x == null) {
 			if (other.x != null)

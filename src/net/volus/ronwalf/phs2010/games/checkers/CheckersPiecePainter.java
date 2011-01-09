@@ -1,11 +1,5 @@
 package net.volus.ronwalf.phs2010.games.checkers;
 
-import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.Red;
-import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.RedKing;
-import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.White;
-import static net.volus.ronwalf.phs2010.games.checkers.CheckersPiece.WhiteKing;
-
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -33,7 +27,6 @@ public class CheckersPiecePainter implements PiecePainter<CheckersPiece> {
 	
 	private void paintO(Graphics2D g, int size, Color fill) {
 		int w = Math.max(2, size/10);
-		int d = size;
 		g.setColor(Color.black);
 		g.fillOval(1, 1, size-2, size-2);
 		g.setColor(fill);

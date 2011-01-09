@@ -36,7 +36,6 @@ public class CheckersCountHeuristic implements HeuristicFunction<CheckersState> 
 	public static final CheckersCountHeuristic instance = new CheckersCountHeuristic();
 	
 	public double[] score(CheckersState state) {
-		int size = state.getBoard().size();
 		double val = 0;
 		
 		for (Board.Element<CheckersPiece> cell : state.getBoard()) {

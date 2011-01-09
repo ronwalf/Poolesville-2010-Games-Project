@@ -10,6 +10,7 @@ import org.apache.mina.core.session.IoSession;
 
 public class SampleServerHandler implements IoHandler {
 
+	@SuppressWarnings("unused")
 	final private SampleServer server;
 	
 	public SampleServerHandler(SampleServer server) {

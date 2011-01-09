@@ -41,7 +41,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.volus.ronwalf.phs2010.games.core.SearchController;
-import net.volus.ronwalf.phs2010.games.core.StoppedException;
 
 public class StopPanel extends JPanel {
 
@@ -55,12 +54,6 @@ public class StopPanel extends JPanel {
 	private StopPanelController controller;
 	
 	private class StopPanelController implements SearchController {
-
-		public void check() throws StoppedException {
-			if (isStopped()) {
-				throw new StoppedException();
-			}
-		}
 
 		public synchronized boolean isStopped() {
 			if (!stopped)

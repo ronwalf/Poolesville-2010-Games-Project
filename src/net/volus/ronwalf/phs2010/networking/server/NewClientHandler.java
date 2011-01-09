@@ -1,8 +1,6 @@
 package net.volus.ronwalf.phs2010.networking.server;
 
-import net.volus.ronwalf.phs2010.networking.message.Ack;
 import net.volus.ronwalf.phs2010.networking.message.Login;
-import net.volus.ronwalf.phs2010.networking.message.MessageFactory;
 import net.volus.ronwalf.phs2010.networking.message.MessageVisitorAdapter;
 
 import org.apache.mina.core.session.IoSession;

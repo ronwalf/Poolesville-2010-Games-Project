@@ -23,7 +23,6 @@ public class TicTacCellPainter implements PiecePainter<TicTacCell> {
 	
 	private void paintO(Graphics2D g, int size) {
 		int w = Math.max(2, size/10);
-		int d = size;
 		g.setColor(Color.black);
 		g.fillOval(1, 1, size-2, size-2);
 		g.setColor(g.getBackground());

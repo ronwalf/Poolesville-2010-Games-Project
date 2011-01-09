@@ -43,7 +43,6 @@ import net.volus.ronwalf.phs2010.games.gui.BoardListener;
 import net.volus.ronwalf.phs2010.games.gui.BoardPanel;
 import net.volus.ronwalf.phs2010.games.gui.PlayerManager;
 import net.volus.ronwalf.phs2010.games.gui.StateChangeListener;
-import net.volus.ronwalf.phs2010.games.gui.BoardPanel.Cell;
 import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiDistanceHeuristic;
 import net.volus.ronwalf.phs2010.games.reversi.heuristics.ReversiSafeHeuristic;
 import net.volus.ronwalf.phs2010.games.tictactoe.TicTacCell;

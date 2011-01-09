@@ -46,7 +46,6 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 	private final HeuristicFunction<State> function;
 	private final SearchController controller;
 	private boolean estimated;
-	private double lastBest;
 	
 	public AlphaBetaPlayer(GameTransition<State, Action> transition,
 			HeuristicFunction<State> function, SearchController controller) {
@@ -114,7 +113,7 @@ public class AlphaBetaPlayer<State extends PlayerState, Action>
 			}
 			
 		}
-		lastBest = bestFound[turn];
+		
 		return bestAction;
 	}
 	

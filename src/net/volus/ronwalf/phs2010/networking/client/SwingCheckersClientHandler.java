@@ -23,12 +23,6 @@ import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.SwingUtilities;
-
-import net.volus.ronwalf.phs2010.games.checkers.CheckersMove;
-import net.volus.ronwalf.phs2010.games.checkers.CheckersState;
-import net.volus.ronwalf.phs2010.games.core.GamePlayer;
-import net.volus.ronwalf.phs2010.games.util.SimpleController;
 import net.volus.ronwalf.phs2010.networking.message.Ack;
 import net.volus.ronwalf.phs2010.networking.message.GameResult;
 import net.volus.ronwalf.phs2010.networking.message.GameState;
