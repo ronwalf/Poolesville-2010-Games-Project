@@ -26,6 +26,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package net.volus.ronwalf.phs2010.networking.server;
 
+import java.util.Arrays;
+
 import net.volus.ronwalf.phs2010.games.core.Game;
 import net.volus.ronwalf.phs2010.games.core.PlayerState;
 import net.volus.ronwalf.phs2010.networking.message.Ack;
@@ -132,16 +134,17 @@ public class NetworkGame implements GameClientListener {
 		}
 		
 		if (offender >= 0 && state != null) {
-			System.out.println("Default!");
+//			System.out.println("Default!");
 			int badscore = -(players.length - 1);
 			double[] score = new double[players.length];
 			for (int i = 0; i < score.length; i++) {
 				if (i != offender) 
 					score[i] = 1;
 				else
-					score[i] = -badscore;
+					score[i] = badscore;
 				
 			}
+//			System.out.println(Arrays.toString(score));
 			String msg = scoreMessage(score);
 			for (GameClient player : players) {
 				GameResult result = MessageFactory.instance.gameResult(name, msg);
